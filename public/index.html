@@ -23,10 +23,17 @@
             <a href="#">👤 Perfil</a>
             <a href="#">⚙️ Ajustes</a>
         </nav>
-        <div class="user-profile">
+        
+        <div class="user-profile" onclick="toggleMenuPerfil(event)">
             <img src="https://github.com/kamsantana.png" alt="Avatar" class="avatar">
             <span class="arrow">▼</span>
             <span class="notification">🔔</span>
+            
+            <div class="dropdown-menu" id="dropdown-menu">
+                <a href="#" id="btn-menu-login" onclick="abrirModal('modal-login')">🔑 Iniciar Sesión</a>
+                <a href="#" id="btn-menu-publicar" onclick="abrirModal('modal-publicar')" style="display: none;">✍️ Publicar Artículo</a>
+                <a href="#" id="btn-menu-logout" onclick="cerrarSesion()" style="display: none; color: #ff5252;">🚪 Cerrar Sesión</a>
+            </div>
         </div>
     </header>
 
@@ -52,10 +59,46 @@
 
     <footer class="footer-credits">ELABORADO POR BSNQ</footer>
 
+    <div class="modal-overlay" id="modal-login" onclick="cerrarModal('modal-login')">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <h2>Iniciar Sesión</h2>
+            <form onsubmit="procesarLogin(event)">
+                <input type="text" id="login-username" placeholder="Usuario" required>
+                <input type="password" id="login-password" placeholder="Contraseña" required>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modal-login')">Cancelar</button>
+                    <button type="submit" class="btn-aceptar">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-publicar" onclick="cerrarModal('modal-publicar')">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <h2>Publicar Nuevo Artículo</h2>
+            <form onsubmit="procesarPublicacion(event)">
+                <select id="pub-seccion" required>
+                    <option value="arquitectura">Materia: Arquitectura</option>
+                    <option value="calidad">Materia: Calidad</option>
+                </select>
+                <input type="text" id="pub-semana" placeholder="Ej: Semana 3" required>
+                <input type="text" id="pub-titulo" placeholder="Título del artículo" required>
+                <input type="text" id="pub-subtitulo" placeholder="Subtítulo o descripción corta" required>
+                <input type="text" id="pub-categoria" placeholder="Categoría (Ej: TEORÍA o PRÁCTICA)" required>
+                <textarea id="pub-contenido" placeholder="Desarrollo completo del artículo..." rows="5" required></textarea>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modal-publicar')">Cancelar</button>
+                    <button type="submit" class="btn-aceptar">Publicar artículo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         let datosApuntes = [];     // Guarda todo el contenido de Neon
         let datosFiltrados = [];   // Guarda solo los artículos de la sección activa
         let seccionActual = 'arquitectura'; // Empezamos mostrando Arquitectura por defecto
+        let sesionActiva = localStorage.getItem('isLoggedIn') === 'true';
 
         async function cargarDatos() {
             try {
@@ -64,6 +107,7 @@
                 
                 // Inicializar mostrando la sección por defecto
                 filtrarYMostrar(seccionActual);
+                actualizarInterfazUsuario();
             } catch (error) {
                 document.getElementById('card-text').innerText = "Error al conectar con la base de datos de Neon.";
             }
@@ -84,7 +128,6 @@
             }
 
             // Filtrar los apuntes que correspondan a la sección (arquitectura o calidad)
-            // Nota: Si en Neon guardaste con minúsculas o mayúsculas, esto lo unifica
             datosFiltrados = datosApuntes.filter(item => (item.seccion || 'arquitectura').toLowerCase() === seccion.toLowerCase());
 
             const sidebarList = document.getElementById('sidebar-list');
@@ -144,6 +187,107 @@
 
             // Filtrar y actualizar el contenido
             filtrarYMostrar(seccion);
+        }
+
+        // --- FUNCIONES PARA LOGUEO Y PUBLICACIÓN ---
+
+        function toggleMenuPerfil(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('dropdown-menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function abrirModal(idModal) {
+            document.getElementById(idModal).style.display = 'flex';
+        }
+
+        function cerrarModal(idModal) {
+            document.getElementById(idModal).style.display = 'none';
+        }
+
+        async function procesarLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const resultado = await res.json();
+
+                if (resultado.success) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    sesionActiva = true;
+                    cerrarModal('modal-login');
+                    actualizarInterfazUsuario();
+                } else {
+                    alert('Usuario o contraseña incorrectos');
+                }
+            } catch (error) {
+                alert('Error al intentar iniciar sesión');
+            }
+        }
+
+        async function procesarPublicacion(event) {
+            event.preventDefault();
+            const opciones = { day: '2-digit', month: 'long', year: 'numeric' };
+            const hoy = new Date().toLocaleDateString('es-ES', opciones);
+
+            const nuevoArticulo = {
+                seccion: document.getElementById('pub-seccion').value,
+                semana: document.getElementById('pub-semana').value,
+                titulo: document.getElementById('pub-semana').value + ": " + document.getElementById('pub-titulo').value,
+                subtitulo: document.getElementById('pub-subtitulo').value,
+                categoria: document.getElementById('pub-categoria').value,
+                contenido: document.getElementById('pub-contenido').value,
+                fecha: hoy
+            };
+
+            try {
+                const res = await fetch('/api/publicar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(nuevoArticulo)
+                });
+                const resultado = await res.json();
+
+                if (resultado.success) {
+                    cerrarModal('modal-publicar');
+                    alert('¡Artículo guardado con éxito!');
+                    cargarDatos(); // Recargar la lista desde Neon
+                } else {
+                    alert('Error al publicar el artículo');
+                }
+            } catch (error) {
+                alert('Error en el servidor al publicar');
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('isLoggedIn');
+            sesionActiva = false;
+            actualizarInterfazUsuario();
+            filtrarYMostrar(seccionActual);
+        }
+
+        function actualizarInterfazUsuario() {
+            if (sesionActiva) {
+                document.getElementById('btn-menu-login').style.display = 'none';
+                document.getElementById('btn-menu-publicar').style.display = 'block';
+                document.getElementById('btn-menu-logout').style.display = 'block';
+            } else {
+                document.getElementById('btn-menu-login').style.display = 'block';
+                document.getElementById('btn-menu-publicar').style.display = 'none';
+                document.getElementById('btn-menu-logout').style.display = 'none';
+            }
+        }
+
+        // Ocultar el menú desplegable si se hace clic fuera de él
+        window.onclick = function() {
+            document.getElementById('dropdown-menu').style.display = 'none';
         }
 
         // Iniciar la carga de datos al abrir la página
