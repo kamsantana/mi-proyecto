@@ -29,10 +29,35 @@
             <span class="arrow">▼</span>
             <span class="notification">🔔</span>
             
-            <div class="dropdown-menu" id="dropdown-menu">
-                <a href="#" id="btn-menu-login" onclick="abrirModal('modal-login')">🔑 Iniciar Sesión</a>
-                <a href="#" id="btn-menu-publicar" onclick="abrirModal('modal-publicar')" style="display: none;">✍️ Publicar Artículo</a>
-                <a href="#" id="btn-menu-logout" onclick="cerrarSesion()" style="display: none; color: #ff5252;">🚪 Cerrar Sesión</a>
+            <div class="dropdown-menu" id="dropdown-menu" onclick="event.stopPropagation()">
+                
+                <div id="box-login-estado">
+                    <h4 class="menu-title">🔑 Iniciar Sesión</h4>
+                    <form onsubmit="procesarLogin(event)">
+                        <input type="text" id="login-username" placeholder="Usuario" required>
+                        <input type="password" id="login-password" placeholder="Contraseña" required>
+                        <button type="submit" class="btn-menu-action">Ingresar</button>
+                    </form>
+                </div>
+
+                <div id="box-publicar-estado" style="display: none;">
+                    <h4 class="menu-title">✍️ Publicar Artículo</h4>
+                    <form onsubmit="procesarPublicacion(event)">
+                        <select id="pub-seccion" required>
+                            <option value="arquitectura">Materia: Arquitectura</option>
+                            <option value="calidad">Materia: Calidad</option>
+                        </select>
+                        <input type="text" id="pub-semana" placeholder="Ej: Semana 3" required>
+                        <input type="text" id="pub-titulo" placeholder="Título del artículo" required>
+                        <input type="text" id="pub-subtitulo" placeholder="Subtítulo o descripción corta" required>
+                        <input type="text" id="pub-categoria" placeholder="Categoría (TEORÍA / PRÁCTICA)" required>
+                        <textarea id="pub-contenido" placeholder="Desarrollo completo del artículo..." rows="4" required></textarea>
+                        <button type="submit" class="btn-menu-action btn-green">Publicar artículo</button>
+                    </form>
+                    <hr class="menu-divider">
+                    <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
+                </div>
+
             </div>
         </div>
     </header>
@@ -58,41 +83,6 @@
     </main>
 
     <footer class="footer-credits">ELABORADO POR BSNQ</footer>
-
-    <div class="modal-overlay" id="modal-login" onclick="cerrarModal('modal-login')">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <h2>Iniciar Sesión</h2>
-            <form onsubmit="procesarLogin(event)">
-                <input type="text" id="login-username" placeholder="Usuario" required>
-                <input type="password" id="login-password" placeholder="Contraseña" required>
-                <div class="modal-actions">
-                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modal-login')">Cancelar</button>
-                    <button type="submit" class="btn-aceptar">Ingresar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="modal-publicar" onclick="cerrarModal('modal-publicar')">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <h2>Publicar Nuevo Artículo</h2>
-            <form onsubmit="procesarPublicacion(event)">
-                <select id="pub-seccion" required>
-                    <option value="arquitectura">Materia: Arquitectura</option>
-                    <option value="calidad">Materia: Calidad</option>
-                </select>
-                <input type="text" id="pub-semana" placeholder="Ej: Semana 3" required>
-                <input type="text" id="pub-titulo" placeholder="Título del artículo" required>
-                <input type="text" id="pub-subtitulo" placeholder="Subtítulo o descripción corta" required>
-                <input type="text" id="pub-categoria" placeholder="Categoría (Ej: TEORÍA o PRÁCTICA)" required>
-                <textarea id="pub-contenido" placeholder="Desarrollo completo del artículo..." rows="5" required></textarea>
-                <div class="modal-actions">
-                    <button type="button" class="btn-cancelar" onclick="cerrarModal('modal-publicar')">Cancelar</button>
-                    <button type="submit" class="btn-aceptar">Publicar artículo</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <script>
         let datosApuntes = [];     // Guarda todo el contenido de Neon
@@ -189,20 +179,12 @@
             filtrarYMostrar(seccion);
         }
 
-        // --- FUNCIONES PARA LOGUEO Y PUBLICACIÓN ---
+        // --- SISTEMA DIRECTO DE DROPDOWN Y SESIÓN ---
 
         function toggleMenuPerfil(event) {
-            event.stopPropagation();
+            event.stopPropagation(); // Evita que se cierre al hacer clic en la flecha
             const menu = document.getElementById('dropdown-menu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function abrirModal(idModal) {
-            document.getElementById(idModal).style.display = 'flex';
-        }
-
-        function cerrarModal(idModal) {
-            document.getElementById(idModal).style.display = 'none';
         }
 
         async function procesarLogin(event) {
@@ -221,7 +203,6 @@
                 if (resultado.success) {
                     localStorage.setItem('isLoggedIn', 'true');
                     sesionActiva = true;
-                    cerrarModal('modal-login');
                     actualizarInterfazUsuario();
                 } else {
                     alert('Usuario o contraseña incorrectos');
@@ -255,9 +236,13 @@
                 const resultado = await res.json();
 
                 if (resultado.success) {
-                    cerrarModal('modal-publicar');
-                    alert('¡Artículo guardado con éxito!');
-                    cargarDatos(); // Recargar la lista desde Neon
+                    alert('¡Artículo guardado con éxito en Neon Console!');
+                    // Limpiar formulario y cerrar recuadro de manera limpia
+                    document.getElementById('pub-titulo').value = '';
+                    document.getElementById('pub-subtitulo').value = '';
+                    document.getElementById('pub-contenido').value = '';
+                    document.getElementById('dropdown-menu').style.display = 'none';
+                    cargarDatos(); // Actualizar el dashboard de inmediato
                 } else {
                     alert('Error al publicar el artículo');
                 }
@@ -275,17 +260,15 @@
 
         function actualizarInterfazUsuario() {
             if (sesionActiva) {
-                document.getElementById('btn-menu-login').style.display = 'none';
-                document.getElementById('btn-menu-publicar').style.display = 'block';
-                document.getElementById('btn-menu-logout').style.display = 'block';
+                document.getElementById('box-login-estado').style.display = 'none';
+                document.getElementById('box-publicar-estado').style.display = 'block';
             } else {
-                document.getElementById('btn-menu-login').style.display = 'block';
-                document.getElementById('btn-menu-publicar').style.display = 'none';
-                document.getElementById('btn-menu-logout').style.display = 'none';
+                document.getElementById('box-login-estado').style.display = 'block';
+                document.getElementById('box-publicar-estado').style.display = 'none';
             }
         }
 
-        // Ocultar el menú desplegable si se hace clic fuera de él
+        // Ocultar el menú desplegable limpiamente si se hace clic afuera del recuadro
         window.onclick = function() {
             document.getElementById('dropdown-menu').style.display = 'none';
         }
