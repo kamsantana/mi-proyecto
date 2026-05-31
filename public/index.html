@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAVIRAC - Arquitectura</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🏛️</span>
+            <div>
+                <p class="logo-sub">Instituto Superior Tecnológico</p>
+                <h1 class="logo-main">YAVIRAC</h1>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="active">🏠 Inicio</a>
+            <a href="#">🌐 Arquitectura</a>
+            <a href="#">✔️ Calidad</a>
+            <a href="#">👤 Perfil</a>
+            <a href="#">⚙️ Ajustes</a>
+        </nav>
+        <div class="user-profile">
+            <img src="https://via.placeholder.com/40" alt="Avatar" class="avatar">
+            <span class="arrow">▼</span>
+            <span class="notification">🔔</span>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        
+        <section class="main-card" id="main-card">
+            <span class="badge" id="card-category">CARGANDO...</span>
+            <h2 class="card-title" id="card-title">Selecciona un tema</h2>
+            <h3 class="card-subtitle" id="card-subtitle">Por favor espera</h3>
+            <p class="card-text" id="card-text">Cargando la información desde Neon Console...</p>
+            
+            <div class="card-footer">
+                <span class="date" id="card-date">-- de -- de ----</span>
+                <button class="btn-consultar">CONSULTAR APUNTE ➔</button>
+            </div>
+        </section>
+
+        <aside class="sidebar">
+            <div class="sidebar-item active" onclick="cambiarContenido(1)">
+                <h3>Semana 1: Pilares de la Arquitectura</h3>
+                <p>Arquitectura de Software</p>
+            </div>
+            <div class="sidebar-item" onclick="cambiarContenido(2)">
+                <h3>Semana 2: Pilares de la Arquitectura</h3>
+                <p>Semana 1: Pilares de la Arquitectura</p>
+            </div>
+            <div class="sidebar-item">
+                <h3>Enqualización Superior et Tecnológico</h3>
+                <p>Yavirac</p>
+            </div>
+            <div class="watermark-logo">YAVIRAC</div>
+        </aside>
+    </main>
+
+    <footer class="footer-credits">ELABORADO POR BSNQ</footer>
+
+    <script>
+        let datosApuntes = [];
+
+        async function cargarDatos() {
+            try {
+                const respuesta = await fetch('/api/get-apuntes');
+                datosApuntes = await respuesta.json();
+                // Mostrar el primer elemento por defecto si existe
+                if(datosApuntes.length > 0) renderizarTarjeta(0);
+            } catch (error) {
+                document.getElementById('card-text').innerText = "Error al conectar con la base de datos.";
+            }
+        }
+
+        function renderizarTarjeta(indice) {
+            const data = datosApuntes[indice];
+            if(!data) return;
+            
+            document.getElementById('card-category').innerText = data.categoria;
+            document.getElementById('card-title').innerText = data.titulo;
+            document.getElementById('card-subtitle').innerText = data.subtitulo;
+            document.getElementById('card-text').innerText = data.contenido;
+            document.getElementById('card-date').innerText = data.fecha;
+        }
+
+        function cambiarContenido(semanaNum) {
+            // Quitar clase activa de todos y ponerla en el seleccionado
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Renderizar la semana correspondiente (0 para semana 1, 1 para semana 2, etc.)
+            renderizarTarjeta(semanaNum - 1);
+        }
+
+        // Ejecutar al cargar la página
+        cargarDatos();
+    </script>
+</body>
+</html>
