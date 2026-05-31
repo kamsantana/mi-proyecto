@@ -17,14 +17,14 @@
             </div>
         </div>
         <nav class="nav-links">
-            <a href="#" class="active">🏠 Inicio</a>
-            <a href="#">🌐 Arquitectura</a>
-            <a href="#">✔️ Calidad</a>
+            <a href="#" id="nav-inicio" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
+            <a href="#" id="nav-arquitectura" class="active" onclick="cambiarSeccion('arquitectura', this)">🌐 Arquitectura</a>
+            <a href="#" id="nav-calidad" onclick="cambiarSeccion('calidad', this)">✔️ Calidad</a>
             <a href="#">👤 Perfil</a>
             <a href="#">⚙️ Ajustes</a>
         </nav>
         <div class="user-profile">
-            <img src="https://via.placeholder.com/40" alt="Avatar" class="avatar">
+            <img src="https://github.com/kamsantana.png" alt="Avatar" class="avatar">
             <span class="arrow">▼</span>
             <span class="notification">🔔</span>
         </div>
@@ -45,18 +45,7 @@
         </section>
 
         <aside class="sidebar">
-            <div class="sidebar-item active" onclick="cambiarContenido(1)">
-                <h3>Semana 1: Pilares de la Arquitectura</h3>
-                <p>Arquitectura de Software</p>
-            </div>
-            <div class="sidebar-item" onclick="cambiarContenido(2)">
-                <h3>Semana 2: Pilares de la Arquitectura</h3>
-                <p>Semana 1: Pilares de la Arquitectura</p>
-            </div>
-            <div class="sidebar-item">
-                <h3>Enqualización Superior et Tecnológico</h3>
-                <p>Yavirac</p>
-            </div>
+            <div id="sidebar-list"></div>
             <div class="watermark-logo">YAVIRAC</div>
         </aside>
     </main>
@@ -64,40 +53,100 @@
     <footer class="footer-credits">ELABORADO POR BSNQ</footer>
 
     <script>
-        let datosApuntes = [];
+        let datosApuntes = [];     // Guarda todo el contenido de Neon
+        let datosFiltrados = [];   // Guarda solo los artículos de la sección activa
+        let seccionActual = 'arquitectura'; // Empezamos mostrando Arquitectura por defecto
 
         async function cargarDatos() {
             try {
                 const respuesta = await fetch('/api/get-apuntes');
                 datosApuntes = await respuesta.json();
-                // Mostrar el primer elemento por defecto si existe
-                if(datosApuntes.length > 0) renderizarTarjeta(0);
+                
+                // Inicializar mostrando la sección por defecto
+                filtrarYMostrar(seccionActual);
             } catch (error) {
-                document.getElementById('card-text').innerText = "Error al conectar con la base de datos.";
+                document.getElementById('card-text').innerText = "Error al conectar con la base de datos de Neon.";
             }
         }
 
+        function filtrarYMostrar(seccion) {
+            seccionActual = seccion;
+
+            // CASO ESPECIAL: Pantalla de Inicio / Bienvenida limpia
+            if (seccion === 'inicio') {
+                document.getElementById('sidebar-list').innerHTML = `<p style="color: #8ca0b3; padding: 15px; font-size: 14px;">Selecciona una materia en el menú superior para ver sus artículos.</p>`;
+                document.getElementById('card-category').innerText = "BIENVENIDO";
+                document.getElementById('card-title').innerText = "Repositorio Académico Yavirac";
+                document.getElementById('card-subtitle').innerText = "Elige una asignatura arriba";
+                document.getElementById('card-text').innerText = "Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes y artículos cargados en tiempo real desde Neon.";
+                document.getElementById('card-date').innerText = "Hoy";
+                return;
+            }
+
+            // Filtrar los apuntes que correspondan a la sección (arquitectura o calidad)
+            // Nota: Si en Neon guardaste con minúsculas o mayúsculas, esto lo unifica
+            datosFiltrados = datosApuntes.filter(item => (item.seccion || 'arquitectura').toLowerCase() === seccion.toLowerCase());
+
+            const sidebarList = document.getElementById('sidebar-list');
+            sidebarList.innerHTML = '';
+
+            if (datosFiltrados.length === 0) {
+                sidebarList.innerHTML = `<p style="color: #8ca0b3; padding: 15px; font-size: 14px;">No hay artículos publicados en esta sección.</p>`;
+                document.getElementById('card-category').innerText = "VACÍO";
+                document.getElementById('card-title').innerText = "Próximamente";
+                document.getElementById('card-subtitle').innerText = "Sección en desarrollo";
+                document.getElementById('card-text').innerText = "Aún no se han registrado artículos para esta sección en Neon Console.";
+                document.getElementById('card-date').innerText = "--";
+                return;
+            }
+
+            // Construir los elementos de la barra lateral dinámicamente
+            datosFiltrados.forEach((item, indice) => {
+                const itemHtml = `
+                    <div class="sidebar-item ${indice === 0 ? 'active' : ''}" onclick="seleccionarArticulo(${indice}, event)">
+                        <h3>${item.semana}: ${item.titulo.split(': ')[1] || item.titulo}</h3>
+                        <p>${item.subtitulo}</p>
+                    </div>
+                `;
+                sidebarList.insertAdjacentHTML('beforeend', itemHtml);
+            });
+
+            // Mostrar automáticamente el primer artículo de la sección filtrada
+            renderizarTarjeta(0);
+        }
+
         function renderizarTarjeta(indice) {
-            const data = datosApuntes[indice];
+            const data = datosFiltrados[indice];
             if(!data) return;
             
-            document.getElementById('card-category').innerText = data.categoria;
+            document.getElementById('card-category').innerText = data.categoria.toUpperCase();
             document.getElementById('card-title').innerText = data.titulo;
             document.getElementById('card-subtitle').innerText = data.subtitulo;
             document.getElementById('card-text').innerText = data.contenido;
             document.getElementById('card-date').innerText = data.fecha;
         }
 
-        function cambiarContenido(semanaNum) {
-            // Quitar clase activa de todos y ponerla en el seleccionado
+        function seleccionarArticulo(indice, evento) {
+            // Manejar clase activa de los bloques laterales
             document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            evento.currentTarget.classList.add('active');
             
-            // Renderizar la semana correspondiente (0 para semana 1, 1 para semana 2, etc.)
-            renderizarTarjeta(semanaNum - 1);
+            renderizarTarjeta(indice);
         }
 
-        // Ejecutar al cargar la página
+        function cambiarSeccion(seccion, elementoNav) {
+            // Evitar que recargue la página la etiqueta '#'
+            event.preventDefault();
+
+            // Manejar clase activa del menú de navegación superior
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            elementoNav.classList.add('active');
+
+            // Filtrar y actualizar el contenido
+            filtrarYMostrar(seccion);
+        }
+
+        // Iniciar la carga de datos al abrir la página
         cargarDatos();
     </script>
 </body>
