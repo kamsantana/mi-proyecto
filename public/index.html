@@ -72,7 +72,7 @@
             
             <div class="card-footer">
                 <span class="date" id="card-date">-- de -- de ----</span>
-                <button class="btn-consultar">CONSULTAR APUNTE ➔</button>
+                <button class="btn-consultar" id="btn-abrir-apunte">CONSULTAR APUNTE ➔</button>
             </div>
         </section>
 
@@ -82,20 +82,33 @@
         </aside>
     </main>
 
+    <div id="modal-apunte" class="modal-overlay" onclick="cerrarModalApunte()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="cerrarModalApunte()">&times;</button>
+            <div class="modal-body">
+                <span class="badge" id="modal-category">TEORÍA</span>
+                <h1 id="modal-title" class="modal-main-title">Semana 1: Pilares de la Arquitectura</h1>
+                <p id="modal-date" class="modal-date-text">28 de Mayo de 2026</p>
+                <div class="modal-divider"></div>
+                
+                <div id="modal-text-content"></div>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer-credits">ELABORADO POR BSNQ</footer>
 
     <script>
-        let datosApuntes = [];     // Guarda todo el contenido de Neon
-        let datosFiltrados = [];   // Guarda solo los artículos de la sección activa
-        let seccionActual = 'arquitectura'; // Empezamos mostrando Arquitectura por defecto
+        let datosApuntes = [];     
+        let datosFiltrados = [];   
+        let seccionActual = 'arquitectura'; 
         let sesionActiva = localStorage.getItem('isLoggedIn') === 'true';
+        let indiceArticuloSeleccionado = 0; // Guardamos el índice actual para pasarlo al Modal
 
         async function cargarDatos() {
             try {
                 const respuesta = await fetch('/api/get-apuntes');
                 datosApuntes = await respuesta.json();
-                
-                // Inicializar mostrando la sección por defecto
                 filtrarYMostrar(seccionActual);
                 actualizarInterfazUsuario();
             } catch (error) {
@@ -106,7 +119,6 @@
         function filtrarYMostrar(seccion) {
             seccionActual = seccion;
 
-            // CASO ESPECIAL: Pantalla de Inicio / Bienvenida limpia
             if (seccion === 'inicio') {
                 document.getElementById('sidebar-list').innerHTML = `<p style="color: #8ca0b3; padding: 15px; font-size: 14px;">Selecciona una materia en el menú superior para ver sus artículos.</p>`;
                 document.getElementById('card-category').innerText = "BIENVENIDO";
@@ -114,10 +126,10 @@
                 document.getElementById('card-subtitle').innerText = "Elige una asignatura arriba";
                 document.getElementById('card-text').innerText = "Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes y artículos cargados en tiempo real desde Neon.";
                 document.getElementById('card-date').innerText = "Hoy";
+                document.getElementById('btn-abrir-apunte').style.display = 'none'; // Esconder botón en inicio
                 return;
             }
 
-            // Filtrar los apuntes que correspondan a la sección (arquitectura o calidad)
             datosFiltrados = datosApuntes.filter(item => (item.seccion || 'arquitectura').toLowerCase() === seccion.toLowerCase());
 
             const sidebarList = document.getElementById('sidebar-list');
@@ -130,10 +142,10 @@
                 document.getElementById('card-subtitle').innerText = "Sección en desarrollo";
                 document.getElementById('card-text').innerText = "Aún no se han registrado artículos para esta sección en Neon Console.";
                 document.getElementById('card-date').innerText = "--";
+                document.getElementById('btn-abrir-apunte').style.display = 'none';
                 return;
             }
 
-            // Construir los elementos de la barra lateral dinámicamente
             datosFiltrados.forEach((item, indice) => {
                 const itemHtml = `
                     <div class="sidebar-item ${indice === 0 ? 'active' : ''}" onclick="seleccionarArticulo(${indice}, event)">
@@ -144,7 +156,6 @@
                 sidebarList.insertAdjacentHTML('beforeend', itemHtml);
             });
 
-            // Mostrar automáticamente el primer artículo de la sección filtrada
             renderizarTarjeta(0);
         }
 
@@ -152,37 +163,95 @@
             const data = datosFiltrados[indice];
             if(!data) return;
             
+            indiceArticuloSeleccionado = indice; // Actualizar rastreador global
+            document.getElementById('btn-abrir-apunte').style.display = 'block'; // Mostrar botón válido
+
             document.getElementById('card-category').innerText = data.categoria.toUpperCase();
             document.getElementById('card-title').innerText = data.titulo;
             document.getElementById('card-subtitle').innerText = data.subtitulo;
-            document.getElementById('card-text').innerText = data.contenido;
+            
+            // Reemplazar saltos de línea para la vista previa rápida
+            document.getElementById('card-text').innerText = data.contenido.substring(0, 180) + "...";
             document.getElementById('card-date').innerText = data.fecha;
         }
 
         function seleccionarArticulo(indice, evento) {
-            // Manejar clase activa de los bloques laterales
             document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
             evento.currentTarget.classList.add('active');
-            
             renderizarTarjeta(indice);
         }
 
         function cambiarSeccion(seccion, elementoNav) {
-            // Evitar que recargue la página la etiqueta '#'
             event.preventDefault();
-
-            // Manejar clase activa del menú de navegación superior
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             elementoNav.classList.add('active');
-
-            // Filtrar y actualizar el contenido
             filtrarYMostrar(seccion);
         }
 
-        // --- SISTEMA DIRECTO DE DROPDOWN Y SESIÓN ---
+        // --- SISTEMA INTERPRETADOR DE CONTENIDO A CUADROS/TABLAS EN EL MODAL ---
+        function abrirModalApunte() {
+            const data = datosFiltrados[indiceArticuloSeleccionado];
+            if(!data) return;
 
+            document.getElementById('modal-category').innerText = data.categoria.toUpperCase();
+            document.getElementById('modal-title').innerText = data.titulo;
+            document.getElementById('modal-date').innerText = data.fecha;
+
+            const contenedorContenido = document.getElementById('modal-text-content');
+            
+            // Función Inteligente: Si separas tus párrafos usando doble barra vertical "||" o "::", 
+            // creará una fila estructurada de tabla de manera automática en la base de datos de Neon.
+            let lineas = data.contenido.split('\n');
+            let htmlFormateado = "";
+            let enTabla = false;
+
+            lineas.forEach(linea => {
+                let stripped = linea.trim();
+                
+                // Si la línea contiene un separador estructural '|' mapeamos cuadros interactivos
+                if (stripped.includes('|')) {
+                    if (!enTabla) {
+                        htmlFormateado += `<table class="tabla-apunte"><thead>`;
+                        let columnas = stripped.split('|');
+                        htmlFormateado += `<tr>${columnas.map(c => `<th>${c.trim()}</th>`).join('')}</tr></thead><tbody>`;
+                        enTabla = true;
+                    } else {
+                        let columnas = stripped.split('|');
+                        htmlFormateado += `<tr>${columnas.map(c => `<td>${c.trim()}</td>`).join('')}</tr>`;
+                    }
+                } else {
+                    if (enTabla) {
+                        htmlFormateado += `</tbody></table>`;
+                        enTabla = false;
+                    }
+                    if (stripped !== "") {
+                        if (stripped.startsWith('###')) {
+                            htmlFormateado += `<h3 class="modal-h3">${stripped.replace('###', '')}</h3>`;
+                        } else if (stripped.startsWith('-')) {
+                            htmlFormateado += `<li class="modal-li">${stripped.substring(1)}</li>`;
+                        } else {
+                            htmlFormateado += `<p class="modal-p">${stripped}</p>`;
+                        }
+                    }
+                }
+            });
+
+            if (enTabla) htmlFormateado += `</tbody></table>`;
+
+            contenedorContenido.innerHTML = htmlFormateado;
+            document.getElementById('modal-apunte').classList.add('modal-visible');
+        }
+
+        function cerrarModalApunte() {
+            document.getElementById('modal-apunte').classList.remove('modal-visible');
+        }
+
+        // Asignar el disparador del botón consultar apunte
+        document.getElementById('btn-abrir-apunte').addEventListener('click', abrirModalApunte);
+
+        // --- SISTEMA DIRECTO DE DROPDOWN Y SESIÓN ---
         function toggleMenuPerfil(event) {
-            event.stopPropagation(); // Evita que se cierre al hacer clic en la flecha
+            event.stopPropagation(); 
             const menu = document.getElementById('dropdown-menu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
@@ -237,12 +306,11 @@
 
                 if (resultado.success) {
                     alert('¡Artículo guardado con éxito en Neon Console!');
-                    // Limpiar formulario y cerrar recuadro de manera limpia
                     document.getElementById('pub-titulo').value = '';
                     document.getElementById('pub-subtitulo').value = '';
                     document.getElementById('pub-contenido').value = '';
                     document.getElementById('dropdown-menu').style.display = 'none';
-                    cargarDatos(); // Actualizar el dashboard de inmediato
+                    cargarDatos(); 
                 } else {
                     alert('Error al publicar el artículo');
                 }
@@ -268,12 +336,10 @@
             }
         }
 
-        // Ocultar el menú desplegable limpiamente si se hace clic afuera del recuadro
         window.onclick = function() {
             document.getElementById('dropdown-menu').style.display = 'none';
         }
 
-        // Iniciar la carga de datos al abrir la página
         cargarDatos();
     </script>
 </body>
