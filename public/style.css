@@ -40,7 +40,7 @@ body {
     display: flex; 
     align-items: center; 
     gap: 10px; 
-    position: relative; /* Indispensable para que el recuadro se alinee abajo de la flecha */
+    position: relative; 
     cursor: pointer;
     padding: 5px 10px;
     border-radius: 8px;
@@ -55,18 +55,18 @@ body {
 
 /* RECUADRO FLOTANTE (Dropdown) */
 .dropdown-menu {
-    display: none; /* Se controla desde el JS con click */
+    display: none; 
     position: absolute;
-    top: 50px; /* Lo ubica exactamente debajo del avatar */
+    top: 50px; 
     right: 0;
     background-color: var(--card-bg);
-    border: 2px solid var(--border-green); /* Mismo borde verde de tus tarjetas */
+    border: 2px solid var(--border-green); 
     border-radius: 12px;
     width: 290px;
     padding: 18px;
     box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.6);
     z-index: 1000;
-    cursor: default; /* Evita que se cierre el menú al hacer foco en inputs */
+    cursor: default; 
 }
 
 /* Elementos internos del Recuadro */
@@ -104,7 +104,7 @@ body {
 .btn-menu-action {
     width: 100%;
     padding: 10px;
-    background-color: var(--orange-accent); /* Color naranja de tus botones */
+    background-color: var(--orange-accent); 
     border: none;
     color: var(--text-white);
     font-weight: bold;
@@ -223,3 +223,42 @@ body {
 
 /* Footer */
 .footer-credits { text-align: right; padding: 20px 40px; font-size: 12px; color: var(--text-gray); }
+
+
+/* ==========================================================================
+   ESTILOS ADICIONALES PARA LA VISTA DE PUBLICACIÓN EN PANTALLA COMPLETA
+   ========================================================================== */
+
+/* Botón reutilizado para cancelar/volver desde las cabeceras */
+.btn-regresar {
+    background: transparent;
+    border: 1px solid var(--orange-accent);
+    color: var(--orange-accent);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-regresar:hover {
+    background-color: var(--orange-accent);
+    color: #ffffff;
+}
+
+/* Clases específicas de maquetación del formulario estructurado */
+.contenedor-formulario-grande input:focus, 
+.contenedor-formulario-grande textarea:focus, 
+.contenedor-formulario-grande select:focus {
+    border-color: var(--accent-green) !important;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 223, 137, 0.2);
+}
+
+/* Efecto hover suave para el botón de confirmación en Neon */
+.contenedor-formulario-grande button[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 223, 137, 0.25);
+}

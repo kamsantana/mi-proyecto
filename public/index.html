@@ -41,19 +41,8 @@
                     </div>
 
                     <div id="box-publicar-estado" style="display: none;">
-                        <h4 class="menu-title">✍️ Publicar Artículo</h4>
-                        <form onsubmit="procesarPublicacion(event)">
-                            <select id="pub-seccion" required>
-                                <option value="arquitectura">Materia: Arquitectura</option>
-                                <option value="calidad">Materia: Calidad</option>
-                            </select>
-                            <input type="text" id="pub-semana" placeholder="Ej: Semana 3" required>
-                            <input type="text" id="pub-titulo" placeholder="Título del artículo" required>
-                            <input type="text" id="pub-subtitulo" placeholder="Subtítulo o descripción corta" required>
-                            <input type="text" id="pub-categoria" placeholder="Categoría (TEORÍA / PRÁCTICA)" required>
-                            <textarea id="pub-contenido" placeholder="Desarrollo del artículo... Usa '|' para armar columnas de cuadros." rows="4" required></textarea>
-                            <button type="submit" class="btn-menu-action btn-green">Publicar artículo</button>
-                        </form>
+                        <h4 class="menu-title">✍️ Gestión de Contenido</h4>
+                        <button type="button" onclick="mostrarPaginaPublicar()" class="btn-menu-action btn-green" style="text-align: center; font-weight: bold;">✍️ Redactar en Grande</button>
                         <hr class="menu-divider">
                         <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
                     </div>
@@ -93,6 +82,70 @@
             <div class="divisor-apunte"></div>
             
             <div id="apunte-pagina-cuerpo"></div>
+        </div>
+    </div>
+
+    <div id="vista-publicar-completo" style="display: none; background-color: #0a0f16; min-height: 100vh;">
+        <header class="navbar">
+            <div class="logo">
+                <span class="logo-icon">🏛️</span>
+                <div>
+                    <p class="logo-sub">Instituto Superior Tecnológico</p>
+                    <h1 class="logo-main">YAVIRAC</h1>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <span style="color: var(--accent-green); font-size: 13px; font-weight: bold; letter-spacing: 0.5px;">📝 MODO EDITOR ACTIVO</span>
+            </nav>
+            <div class="user-profile">
+                <button type="button" class="btn-regresar" style="border: 1px solid #ef4444; color: #ef4444;" onclick="regresarAlDashboard()">❌ Cancelar Redacción</button>
+            </div>
+        </header>
+
+        <div class="contenedor-formulario-grande" style="max-width: 850px; margin: 40px auto; background-color: #141c26; border: 1px solid #1f5e49; border-radius: 16px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+                <h2 style="font-size: 24px; color: #fff; margin: 0 0 5px 0;">🚀 Publicar Artículo Académico</h2>
+                <p style="color: #94a3b8; font-size: 14px; margin: 0;">Sincronización nativa y directa hacia la base de datos de Neon Console</p>
+            </div>
+
+            <form onsubmit="procesarPublicacion(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Asignatura / Sección</label>
+                    <select id="pub-seccion" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" required>
+                        <option value="arquitectura">Materia: Arquitectura de Software</option>
+                        <option value="calidad">Materia: Calidad de Software</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Identificador Temporal</label>
+                    <input type="text" id="pub-semana" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Ej: Semana 3" required>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; grid-column: span 2;">
+                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Título del Artículo</label>
+                    <input type="text" id="pub-titulo" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Nombre principal del tema académico" required>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Subtítulo o Resumen Corto</label>
+                    <input type="text" id="pub-subtitulo" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Breve abstract del apunte" required>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Categoría del Documento</label>
+                    <input type="text" id="pub-categoria" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Ej: TEORÍA / PRÁCTICA" required>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px; grid-column: span 2;">
+                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Desarrollo del Contenido Académico</label>
+                    <textarea id="pub-contenido" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 15px; color: white; font-family: inherit; resize: vertical; line-height: 1.6;" rows="10" placeholder="Escribe el cuerpo completo aquí... Recuerda que puedes usar '|' para generar cuadros tabulares automáticamente." required></textarea>
+                </div>
+
+                <div style="grid-column: span 2; display: flex; justify-content: flex-end; margin-top: 10px;">
+                    <button type="submit" style="background: linear-gradient(135deg, #1f5e49, #00df89); color: #020617; border: none; padding: 14px 35px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s;">🚀 Confirmar Publicación en Neon</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -185,17 +238,14 @@
             filtrarYMostrar(seccion);
         }
 
-        // --- SISTEMA DE CAMBIO DE PÁGINA COMPLETA Y PARSEO DE CUADROS ---
         function mostrarPaginaApunte() {
             const data = datosFiltrados[articuloSeleccionadoIndex];
             if(!data) return;
 
-            // Mapeo de datos básicos
             document.getElementById('apunte-pagina-categoria').innerText = data.categoria.toUpperCase();
             document.getElementById('apunte-pagina-titulo').innerText = data.titulo;
             document.getElementById('apunte-pagina-fecha').innerText = data.fecha;
 
-            // Procesador lógico de texto a cuadros/tablas estructurales
             const cuerpoApunte = document.getElementById('apunte-pagina-cuerpo');
             let lineas = data.contenido.split('\n');
             let htmlFinal = "";
@@ -232,21 +282,28 @@
             });
 
             if (enTabla) htmlFinal += `</tbody></table></div>`;
-
             cuerpoApunte.innerHTML = htmlFinal;
 
-            // Ocultamos el Dashboard completo y mostramos la ventana grande de estudio
             document.getElementById('sitio-principal').style.display = 'none';
             document.getElementById('vista-apunte-completo').style.display = 'block';
             window.scrollTo(0, 0);
         }
 
+        // --- ENRUTAMIENTO DE VISTAS (DASHBOARD <-> PUBLICAR) ---
+        function mostrarPaginaPublicar() {
+            document.getElementById('sitio-principal').style.display = 'none';
+            document.getElementById('vista-apunte-completo').style.display = 'none';
+            document.getElementById('vista-publicar-completo').style.display = 'block';
+            document.getElementById('dropdown-menu').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
         function regresarAlDashboard() {
             document.getElementById('vista-apunte-completo').style.display = 'none';
+            document.getElementById('vista-publicar-completo').style.display = 'none';
             document.getElementById('sitio-principal').style.display = 'block';
         }
 
-        // --- MANEJO DE DROPDOWN PERFIL ---
         function toggleMenuPerfil(event) {
             event.stopPropagation();
             const menu = document.getElementById('dropdown-menu');
@@ -302,7 +359,7 @@
                     document.getElementById('pub-titulo').value = '';
                     document.getElementById('pub-subtitulo').value = '';
                     document.getElementById('pub-contenido').value = '';
-                    document.getElementById('dropdown-menu').style.display = 'none';
+                    regresarAlDashboard();
                     cargarDatos();
                 }
             } catch (error) { alert('Error al publicar'); }
@@ -312,6 +369,7 @@
             localStorage.removeItem('isLoggedIn');
             sesionActiva = false;
             actualizarInterfazUsuario();
+            regresarAlDashboard();
             filtrarYMostrar(seccionActual);
         }
 
