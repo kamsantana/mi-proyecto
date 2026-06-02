@@ -8,91 +8,91 @@
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo">
-            <span class="logo-icon">🏛️</span>
-            <div>
-                <p class="logo-sub">Instituto Superior Tecnológico</p>
-                <h1 class="logo-main">YAVIRAC</h1>
-            </div>
-        </div>
-        <nav class="nav-links">
-            <a href="#" id="nav-inicio" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
-            <a href="#" id="nav-arquitectura" class="active" onclick="cambiarSeccion('arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
-            <a href="#" id="nav-calidad" onclick="cambiarSeccion('calidad', this)">✔️ CALIDAD DE SOFTWARE</a>
-            <a href="#">👤 Perfil</a>
-            <a href="#">⚙️ Ajustes</a>
-        </nav>
-        
-        <div class="user-profile" onclick="toggleMenuPerfil(event)">
-            <img src="https://github.com/kamsantana.png" alt="Avatar" class="avatar">
-            <span class="arrow">▼</span>
-            <span class="notification">🔔</span>
-            
-            <div class="dropdown-menu" id="dropdown-menu" onclick="event.stopPropagation()">
-                
-                <div id="box-login-estado">
-                    <h4 class="menu-title">🔑 Iniciar Sesión</h4>
-                    <form onsubmit="procesarLogin(event)">
-                        <input type="text" id="login-username" placeholder="Usuario" required>
-                        <input type="password" id="login-password" placeholder="Contraseña" required>
-                        <button type="submit" class="btn-menu-action">Ingresar</button>
-                    </form>
+    <div id="sitio-principal">
+        <header class="navbar">
+            <div class="logo">
+                <span class="logo-icon">🏛️</span>
+                <div>
+                    <p class="logo-sub">Instituto Superior Tecnológico</p>
+                    <h1 class="logo-main">YAVIRAC</h1>
                 </div>
-
-                <div id="box-publicar-estado" style="display: none;">
-                    <h4 class="menu-title">✍️ Publicar Artículo</h4>
-                    <form onsubmit="procesarPublicacion(event)">
-                        <select id="pub-seccion" required>
-                            <option value="arquitectura">Materia: Arquitectura</option>
-                            <option value="calidad">Materia: Calidad</option>
-                        </select>
-                        <input type="text" id="pub-semana" placeholder="Ej: Semana 3" required>
-                        <input type="text" id="pub-titulo" placeholder="Título del artículo" required>
-                        <input type="text" id="pub-subtitulo" placeholder="Subtítulo o descripción corta" required>
-                        <input type="text" id="pub-categoria" placeholder="Categoría (TEORÍA / PRÁCTICA)" required>
-                        <textarea id="pub-contenido" placeholder="Desarrollo completo del artículo..." rows="4" required></textarea>
-                        <button type="submit" class="btn-menu-action btn-green">Publicar artículo</button>
-                    </form>
-                    <hr class="menu-divider">
-                    <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
-                </div>
-
             </div>
-        </div>
-    </header>
-
-    <main class="dashboard-container">
-        
-        <section class="main-card" id="main-card">
-            <span class="badge" id="card-category">CARGANDO...</span>
-            <h2 class="card-title" id="card-title">Selecciona un tema</h2>
-            <h3 class="card-subtitle" id="card-subtitle">Por favor espera</h3>
-            <p class="card-text" id="card-text">Cargando la información desde Neon Console...</p>
+            <nav class="nav-links">
+                <a href="#" id="nav-inicio" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
+                <a href="#" id="nav-arquitectura" class="active" onclick="cambiarSeccion('arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
+                <a href="#" id="nav-calidad" onclick="cambiarSeccion('calidad', this)">✔️ CALIDAD DE SOFTWARE</a>
+                <a href="#">👤 Perfil</a>
+                <a href="#">⚙️ Ajustes</a>
+            </nav>
             
-            <div class="card-footer">
-                <span class="date" id="card-date">-- de -- de ----</span>
-                <button class="btn-consultar" id="btn-abrir-apunte">CONSULTAR APUNTE ➔</button>
-            </div>
-        </section>
-
-        <aside class="sidebar">
-            <div id="sidebar-list"></div>
-            <div class="watermark-logo">YAVIRAC</div>
-        </aside>
-    </main>
-
-    <div id="modal-apunte" class="modal-overlay" onclick="cerrarModalApunte()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="cerrarModalApunte()">&times;</button>
-            <div class="modal-body">
-                <span class="badge" id="modal-category">TEORÍA</span>
-                <h1 id="modal-title" class="modal-main-title">Semana 1: Pilares de la Arquitectura</h1>
-                <p id="modal-date" class="modal-date-text">28 de Mayo de 2026</p>
-                <div class="modal-divider"></div>
+            <div class="user-profile" onclick="toggleMenuPerfil(event)">
+                <img src="https://github.com/kamsantana.png" alt="Avatar" class="avatar">
+                <span class="arrow">▼</span>
+                <span class="notification">🔔</span>
                 
-                <div id="modal-text-content"></div>
+                <div class="dropdown-menu" id="dropdown-menu" onclick="event.stopPropagation()">
+                    <div id="box-login-estado">
+                        <h4 class="menu-title">🔑 Iniciar Sesión</h4>
+                        <form onsubmit="procesarLogin(event)">
+                            <input type="text" id="login-username" placeholder="Usuario" required>
+                            <input type="password" id="login-password" placeholder="Contraseña" required>
+                            <button type="submit" class="btn-menu-action">Ingresar</button>
+                        </form>
+                    </div>
+
+                    <div id="box-publicar-estado" style="display: none;">
+                        <h4 class="menu-title">✍️ Publicar Artículo</h4>
+                        <form onsubmit="procesarPublicacion(event)">
+                            <select id="pub-seccion" required>
+                                <option value="arquitectura">Materia: Arquitectura</option>
+                                <option value="calidad">Materia: Calidad</option>
+                            </select>
+                            <input type="text" id="pub-semana" placeholder="Ej: Semana 3" required>
+                            <input type="text" id="pub-titulo" placeholder="Título del artículo" required>
+                            <input type="text" id="pub-subtitulo" placeholder="Subtítulo o descripción corta" required>
+                            <input type="text" id="pub-categoria" placeholder="Categoría (TEORÍA / PRÁCTICA)" required>
+                            <textarea id="pub-contenido" placeholder="Desarrollo del artículo... Usa '|' para armar columnas de cuadros." rows="4" required></textarea>
+                            <button type="submit" class="btn-menu-action btn-green">Publicar artículo</button>
+                        </form>
+                        <hr class="menu-divider">
+                        <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
+                    </div>
+                </div>
             </div>
+        </header>
+
+        <main class="dashboard-container">
+            <section class="main-card" id="main-card">
+                <span class="badge" id="card-category">CARGANDO...</span>
+                <h2 class="card-title" id="card-title">Selecciona un tema</h2>
+                <h3 class="card-subtitle" id="card-subtitle">Por favor espera</h3>
+                <p class="card-text" id="card-text">Cargando la información desde Neon Console...</p>
+                
+                <div class="card-footer">
+                    <span class="date" id="card-date">-- de -- de ----</span>
+                    <button class="btn-consultar" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <div id="sidebar-list"></div>
+                <div class="watermark-logo">YAVIRAC</div>
+            </aside>
+        </main>
+    </div>
+
+    <div id="vista-apunte-completo" style="display: none;">
+        <header class="navbar-apunte">
+            <button class="btn-regresar" onclick="regresarAlDashboard()">⬅ Volver al Dashboard</button>
+            <span class="badge-apunte" id="apunte-pagina-categoria">TEORÍA</span>
+        </header>
+        
+        <div class="contenido-pagina-apunte">
+            <h1 id="apunte-pagina-titulo" class="apunte-gran-titulo">Semana 1: Pilares de la Arquitectura</h1>
+            <p id="apunte-pagina-fecha" class="apunte-gran-fecha">Cargando fecha...</p>
+            <div class="divisor-apunte"></div>
+            
+            <div id="apunte-pagina-cuerpo"></div>
         </div>
     </div>
 
@@ -103,7 +103,7 @@
         let datosFiltrados = [];   
         let seccionActual = 'arquitectura'; 
         let sesionActiva = localStorage.getItem('isLoggedIn') === 'true';
-        let indiceArticuloSeleccionado = 0; // Guardamos el índice actual para pasarlo al Modal
+        let articuloSeleccionadoIndex = 0;
 
         async function cargarDatos() {
             try {
@@ -124,14 +124,13 @@
                 document.getElementById('card-category').innerText = "BIENVENIDO";
                 document.getElementById('card-title').innerText = "Repositorio Académico Yavirac";
                 document.getElementById('card-subtitle').innerText = "Elige una asignatura arriba";
-                document.getElementById('card-text').innerText = "Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes y artículos cargados en tiempo real desde Neon.";
+                document.getElementById('card-text').innerText = "Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes cargados en tiempo real.";
                 document.getElementById('card-date').innerText = "Hoy";
-                document.getElementById('btn-abrir-apunte').style.display = 'none'; // Esconder botón en inicio
+                document.querySelector('.btn-consultar').style.display = 'none';
                 return;
             }
 
             datosFiltrados = datosApuntes.filter(item => (item.seccion || 'arquitectura').toLowerCase() === seccion.toLowerCase());
-
             const sidebarList = document.getElementById('sidebar-list');
             sidebarList.innerHTML = '';
 
@@ -142,9 +141,11 @@
                 document.getElementById('card-subtitle').innerText = "Sección en desarrollo";
                 document.getElementById('card-text').innerText = "Aún no se han registrado artículos para esta sección en Neon Console.";
                 document.getElementById('card-date').innerText = "--";
-                document.getElementById('btn-abrir-apunte').style.display = 'none';
+                document.querySelector('.btn-consultar').style.display = 'none';
                 return;
             }
+
+            document.querySelector('.btn-consultar').style.display = 'block';
 
             datosFiltrados.forEach((item, indice) => {
                 const itemHtml = `
@@ -163,15 +164,11 @@
             const data = datosFiltrados[indice];
             if(!data) return;
             
-            indiceArticuloSeleccionado = indice; // Actualizar rastreador global
-            document.getElementById('btn-abrir-apunte').style.display = 'block'; // Mostrar botón válido
-
+            articuloSeleccionadoIndex = indice;
             document.getElementById('card-category').innerText = data.categoria.toUpperCase();
             document.getElementById('card-title').innerText = data.titulo;
             document.getElementById('card-subtitle').innerText = data.subtitulo;
-            
-            // Reemplazar saltos de línea para la vista previa rápida
-            document.getElementById('card-text').innerText = data.contenido.substring(0, 180) + "...";
+            document.getElementById('card-text').innerText = data.contenido.substring(0, 140) + "... (clic en consultar para ver completo)";
             document.getElementById('card-date').innerText = data.fecha;
         }
 
@@ -188,70 +185,70 @@
             filtrarYMostrar(seccion);
         }
 
-        // --- SISTEMA INTERPRETADOR DE CONTENIDO A CUADROS/TABLAS EN EL MODAL ---
-        function abrirModalApunte() {
-            const data = datosFiltrados[indiceArticuloSeleccionado];
+        // --- SISTEMA DE CAMBIO DE PÁGINA COMPLETA Y PARSEO DE CUADROS ---
+        function mostrarPaginaApunte() {
+            const data = datosFiltrados[articuloSeleccionadoIndex];
             if(!data) return;
 
-            document.getElementById('modal-category').innerText = data.categoria.toUpperCase();
-            document.getElementById('modal-title').innerText = data.titulo;
-            document.getElementById('modal-date').innerText = data.fecha;
+            // Mapeo de datos básicos
+            document.getElementById('apunte-pagina-categoria').innerText = data.categoria.toUpperCase();
+            document.getElementById('apunte-pagina-titulo').innerText = data.titulo;
+            document.getElementById('apunte-pagina-fecha').innerText = data.fecha;
 
-            const contenedorContenido = document.getElementById('modal-text-content');
-            
-            // Función Inteligente: Si separas tus párrafos usando doble barra vertical "||" o "::", 
-            // creará una fila estructurada de tabla de manera automática en la base de datos de Neon.
+            // Procesador lógico de texto a cuadros/tablas estructurales
+            const cuerpoApunte = document.getElementById('apunte-pagina-cuerpo');
             let lineas = data.contenido.split('\n');
-            let htmlFormateado = "";
+            let htmlFinal = "";
             let enTabla = false;
 
             lineas.forEach(linea => {
-                let stripped = linea.trim();
+                let limpia = linea.trim();
                 
-                // Si la línea contiene un separador estructural '|' mapeamos cuadros interactivos
-                if (stripped.includes('|')) {
+                if (limpia.includes('|')) {
                     if (!enTabla) {
-                        htmlFormateado += `<table class="tabla-apunte"><thead>`;
-                        let columnas = stripped.split('|');
-                        htmlFormateado += `<tr>${columnas.map(c => `<th>${c.trim()}</th>`).join('')}</tr></thead><tbody>`;
+                        htmlFinal += `<div class="contenedor-cuadro-academico"><table class="tabla-datos"><thead>`;
+                        let celdas = limpia.split('|');
+                        htmlFinal += `<tr>${celdas.map(c => `<th>${c.trim()}</th>`).join('')}</tr></thead><tbody>`;
                         enTabla = true;
                     } else {
-                        let columnas = stripped.split('|');
-                        htmlFormateado += `<tr>${columnas.map(c => `<td>${c.trim()}</td>`).join('')}</tr>`;
+                        let celdas = limpia.split('|');
+                        htmlFinal += `<tr>${celdas.map(c => `<td>${c.trim()}</td>`).join('')}</tr>`;
                     }
                 } else {
                     if (enTabla) {
-                        htmlFormateado += `</tbody></table>`;
+                        htmlFinal += `</tbody></table></div>`;
                         enTabla = false;
                     }
-                    if (stripped !== "") {
-                        if (stripped.startsWith('###')) {
-                            htmlFormateado += `<h3 class="modal-h3">${stripped.replace('###', '')}</h3>`;
-                        } else if (stripped.startsWith('-')) {
-                            htmlFormateado += `<li class="modal-li">${stripped.substring(1)}</li>`;
+                    if (limpia !== "") {
+                        if (limpia.startsWith('###')) {
+                            htmlFinal += `<h3 class="apunte-subtitulo-h3">${limpia.replace('###', '')}</h3>`;
+                        } else if (limpia.startsWith('-')) {
+                            htmlFinal += `<li class="apunte-item-lista">${limpia.substring(1).trim()}</li>`;
                         } else {
-                            htmlFormateado += `<p class="modal-p">${stripped}</p>`;
+                            htmlFinal += `<p class="apunte-parrafo">${limpia}</p>`;
                         }
                     }
                 }
             });
 
-            if (enTabla) htmlFormateado += `</tbody></table>`;
+            if (enTabla) htmlFinal += `</tbody></table></div>`;
 
-            contenedorContenido.innerHTML = htmlFormateado;
-            document.getElementById('modal-apunte').classList.add('modal-visible');
+            cuerpoApunte.innerHTML = htmlFinal;
+
+            // Ocultamos el Dashboard completo y mostramos la ventana grande de estudio
+            document.getElementById('sitio-principal').style.display = 'none';
+            document.getElementById('vista-apunte-completo').style.display = 'block';
+            window.scrollTo(0, 0);
         }
 
-        function cerrarModalApunte() {
-            document.getElementById('modal-apunte').classList.remove('modal-visible');
+        function regresarAlDashboard() {
+            document.getElementById('vista-apunte-completo').style.display = 'none';
+            document.getElementById('sitio-principal').style.display = 'block';
         }
 
-        // Asignar el disparador del botón consultar apunte
-        document.getElementById('btn-abrir-apunte').addEventListener('click', abrirModalApunte);
-
-        // --- SISTEMA DIRECTO DE DROPDOWN Y SESIÓN ---
+        // --- MANEJO DE DROPDOWN PERFIL ---
         function toggleMenuPerfil(event) {
-            event.stopPropagation(); 
+            event.stopPropagation();
             const menu = document.getElementById('dropdown-menu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         }
@@ -268,7 +265,6 @@
                     body: JSON.stringify({ username, password })
                 });
                 const resultado = await res.json();
-
                 if (resultado.success) {
                     localStorage.setItem('isLoggedIn', 'true');
                     sesionActiva = true;
@@ -276,9 +272,7 @@
                 } else {
                     alert('Usuario o contraseña incorrectos');
                 }
-            } catch (error) {
-                alert('Error al intentar iniciar sesión');
-            }
+            } catch (error) { alert('Error al iniciar sesión'); }
         }
 
         async function procesarPublicacion(event) {
@@ -303,20 +297,15 @@
                     body: JSON.stringify(nuevoArticulo)
                 });
                 const resultado = await res.json();
-
                 if (resultado.success) {
-                    alert('¡Artículo guardado con éxito en Neon Console!');
+                    alert('¡Artículo guardado con éxito en Neon!');
                     document.getElementById('pub-titulo').value = '';
                     document.getElementById('pub-subtitulo').value = '';
                     document.getElementById('pub-contenido').value = '';
                     document.getElementById('dropdown-menu').style.display = 'none';
-                    cargarDatos(); 
-                } else {
-                    alert('Error al publicar el artículo');
+                    cargarDatos();
                 }
-            } catch (error) {
-                alert('Error en el servidor al publicar');
-            }
+            } catch (error) { alert('Error al publicar'); }
         }
 
         function cerrarSesion() {
