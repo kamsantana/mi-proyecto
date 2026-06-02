@@ -9,20 +9,20 @@
         /* Estilos rápidos de integración nativa para la vista de lectura limpia */
         #vista-apunte-completo {
             background-color: var(--bg-dark);
-            min-height: 100vh;
+            min-height: calc(100vh - 80px);
             box-sizing: border-box;
+            padding-bottom: 40px;
         }
-        .navbar-apunte {
+        .header-acciones-apunte {
+            max-width: 850px;
+            margin: 30px auto 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #0d161f;
-            padding: 15px 40px;
-            border-bottom: 1px solid #1a2633;
         }
         .contenido-pagina-apunte {
             max-width: 850px;
-            margin: 40px auto;
+            margin: 20px auto;
             background-color: var(--card-bg);
             border: 2px solid var(--border-green);
             border-radius: 16px;
@@ -41,6 +41,7 @@
             margin: 0 0 20px 0;
         }
         .divisor-apunte {
+            border: 0;
             border-top: 1px solid #283a4e;
             margin-bottom: 25px;
         }
@@ -96,104 +97,89 @@
 </head>
 <body>
 
-    <div id="sitio-principal">
-        <header class="navbar">
-            <div class="logo">
-                <span class="logo-icon">🏛️</span>
-                <div>
-                    <p class="logo-sub">Instituto Superior Tecnológico</p>
-                    <h1 class="logo-main">YAVIRAC</h1>
-                </div>
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🏛️</span>
+            <div>
+                <p class="logo-sub">Instituto Superior Tecnológico</p>
+                <h1 class="logo-main">YAVIRAC</h1>
             </div>
-            <nav class="nav-links">
-                <a href="#" id="nav-inicio" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
-                <a href="#" id="nav-arquitectura" class="active" onclick="cambiarSeccion('arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
-                <a href="#" id="nav-calidad" onclick="cambiarSeccion('calidad', this)">✔️ CALIDAD DE SOFTWARE</a>
-                <a href="#">👤 Perfil</a>
-                <a href="#">⚙️ Ajustes</a>
-            </nav>
+        </div>
+        <nav class="nav-links">
+            <a href="#" id="nav-inicio" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
+            <a href="#" id="nav-arquitectura" class="active" onclick="cambiarSeccion('arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
+            <a href="#" id="nav-calidad" onclick="cambiarSeccion('calidad', this)">✔️ CALIDAD DE SOFTWARE</a>
+            <a href="#">👤 Perfil</a>
+            <a href="#">⚙️ Ajustes</a>
+        </nav>
+        
+        <div class="user-profile" onclick="toggleMenuPerfil(event)">
+            <img src="https://github.com/kamsantana.png" alt="Avatar" class="avatar">
+            <span class="arrow">▼</span>
+            <span class="notification">🔔</span>
             
-            <div class="user-profile" onclick="toggleMenuPerfil(event)">
-                <img src="https://github.com/kamsantana.png" alt="Avatar" class="avatar">
-                <span class="arrow">▼</span>
-                <span class="notification">🔔</span>
-                
-                <div class="dropdown-menu" id="dropdown-menu" onclick="event.stopPropagation()">
-                    <div id="box-login-estado">
-                        <h4 class="menu-title">🔑 Iniciar Sesión</h4>
-                        <form onsubmit="procesarLogin(event)">
-                            <input type="text" id="login-username" placeholder="Usuario" required>
-                            <input type="password" id="login-password" placeholder="Contraseña" required>
-                            <button type="submit" class="btn-menu-action">Ingresar</button>
-                        </form>
-                    </div>
+            <div class="dropdown-menu" id="dropdown-menu" onclick="event.stopPropagation()">
+                <div id="box-login-estado">
+                    <h4 class="menu-title">🔑 Iniciar Sesión</h4>
+                    <form onsubmit="procesarLogin(event)">
+                        <input type="text" id="login-username" placeholder="Usuario" required>
+                        <input type="password" id="login-password" placeholder="Contraseña" required>
+                        <button type="submit" class="btn-menu-action">Ingresar</button>
+                    </form>
+                </div>
 
-                    <div id="box-publicar-estado" style="display: none;">
-                        <h4 class="menu-title">✍️ Gestión de Contenido</h4>
-                        <button type="button" onclick="mostrarPaginaPublicar()" class="btn-menu-action btn-green" style="text-align: center; font-weight: bold;">✍️ Redactar en Grande</button>
-                        <hr class="menu-divider">
-                        <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
-                    </div>
+                <div id="box-publicar-estado" style="display: none;">
+                    <h4 class="menu-title">✍️ Gestión de Contenido</h4>
+                    <button type="button" onclick="mostrarPaginaPublicar()" class="btn-menu-action btn-green" style="text-align: center; font-weight: bold;">✍️ Redactar en Grande</button>
+                    <hr class="menu-divider">
+                    <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <main class="dashboard-container">
-            <section class="main-card" id="main-card">
-                <span class="badge" id="card-category">CARGANDO...</span>
-                <h2 class="card-title" id="card-title">Selecciona un tema</h2>
-                <h3 class="card-subtitle" id="card-subtitle">Por favor espera</h3>
-                <p class="card-text" id="card-text">Cargando la información desde Neon Console...</p>
-                
-                <div class="card-footer">
-                    <span class="date" id="card-date">-- de -- de ----</span>
-                    <button class="btn-consultar" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
-                </div>
-            </section>
+    <main class="dashboard-container" id="sitio-principal">
+        <section class="main-card" id="main-card">
+            <span class="badge" id="card-category">CARGANDO...</span>
+            <h2 class="card-title" id="card-title">Selecciona un tema</h2>
+            <h3 class="card-subtitle" id="card-subtitle">Por favor espera</h3>
+            <p class="card-text" id="card-text">Cargando la información desde Neon Console...</p>
+            
+            <div class="card-footer">
+                <span class="date" id="card-date">-- de -- de ----</span>
+                <button class="btn-consultar" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
+            </div>
+        </section>
 
-            <aside class="sidebar">
-                <div id="sidebar-list"></div>
-                <div class="watermark-logo">YAVIRAC</div>
-            </aside>
-        </main>
-    </div>
+        <aside class="sidebar">
+            <div id="sidebar-list"></div>
+            <div class="watermark-logo">YAVIRAC</div>
+        </aside>
+    </main>
 
     <div id="vista-apunte-completo" style="display: none;">
-        <header class="navbar-apunte">
-            <button class="btn-regresar" onclick="regresarAlDashboard()">⬅ Volver al Dashboard</button>
+        <div class="header-acciones-apunte">
+            <button class="btn-regresar" onclick="regresarAlDashboard()">← VOLVER AL LISTADO</button>
             <span class="badge" id="apunte-pagina-categoria">TEORÍA</span>
-        </header>
+        </div>
         
-        <div class="contenido-pagina-apunte">
+        <article class="contenido-pagina-apunte">
             <h1 id="apunte-pagina-titulo" class="apunte-gran-titulo">Cargando Título...</h1>
             <p id="apunte-pagina-fecha" class="apunte-gran-fecha">Cargando fecha...</p>
             <div class="divisor-apunte"></div>
             
             <div id="apunte-pagina-cuerpo"></div>
-        </div>
+        </article>
     </div>
 
-    <div id="vista-publicar-completo" style="display: none; background-color: #0a0f16; min-height: 100vh;">
-        <header class="navbar">
-            <div class="logo">
-                <span class="logo-icon">🏛️</span>
-                <div>
-                    <p class="logo-sub">Instituto Superior Tecnológico</p>
-                    <h1 class="logo-main">YAVIRAC</h1>
-                </div>
-            </div>
-            <nav class="nav-links">
-                <span style="color: var(--accent-green); font-size: 13px; font-weight: bold; letter-spacing: 0.5px;">📝 MODO EDITOR ACTIVO</span>
-            </nav>
-            <div class="user-profile">
-                <button type="button" class="btn-regresar" style="border: 1px solid #ef4444; color: #ef4444;" onclick="regresarAlDashboard()">❌ Cancelar Redacción</button>
-            </div>
-        </header>
-
+    <div id="vista-publicar-completo" style="display: none; background-color: #0a0f16; min-height: calc(100vh - 80px); padding-top: 1px;">
         <div class="contenedor-formulario-grande" style="max-width: 850px; margin: 40px auto; background-color: #141c26; border: 1px solid #1f5e49; border-radius: 16px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-            <div style="margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
-                <h2 style="font-size: 24px; color: #fff; margin: 0 0 5px 0;">🚀 Publicar Artículo Académico</h2>
-                <p style="color: #94a3b8; font-size: 14px; margin: 0;">Sincronización nativa y directa hacia la base de datos de Neon Console</p>
+            <div style="margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h2 style="font-size: 24px; color: #fff; margin: 0 0 5px 0;">🚀 Publicar Artículo Académico</h2>
+                    <p style="color: #94a3b8; font-size: 14px; margin: 0;">Sincronización nativa y directa hacia la base de datos de Neon Console</p>
+                </div>
+                <button type="button" class="btn-regresar" style="border: 1px solid #ef4444; color: #ef4444;" onclick="regresarAlDashboard()">❌ Cancelar</button>
             </div>
 
             <form onsubmit="procesarPublicacion(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -323,6 +309,7 @@
             event.preventDefault();
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             elementoNav.classList.add('active');
+            regresarAlDashboard(); // Si estaba leyendo un apunte, vuelve al dashboard al cambiar de materia
             filtrarYMostrar(seccion);
         }
 
@@ -372,7 +359,9 @@
             if (enTabla) htmlFinal += `</tbody></table></div>`;
             cuerpoApunte.innerHTML = htmlFinal;
 
+            // Transición de vistas sin perder el Header superior
             document.getElementById('sitio-principal').style.display = 'none';
+            document.getElementById('vista-publicar-completo').style.display = 'none';
             document.getElementById('vista-apunte-completo').style.display = 'block';
             window.scrollTo(0, 0);
         }
@@ -388,7 +377,7 @@
         function regresarAlDashboard() {
             document.getElementById('vista-apunte-completo').style.display = 'none';
             document.getElementById('vista-publicar-completo').style.display = 'none';
-            document.getElementById('sitio-principal').style.display = 'block';
+            document.getElementById('sitio-principal').style.display = 'grid'; // Retorna al diseño de rejilla original
         }
 
         function toggleMenuPerfil(event) {

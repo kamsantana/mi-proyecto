@@ -243,20 +243,21 @@ body {
    ========================================================================== */
 #vista-apunte-completo {
     background-color: var(--bg-dark);
-    min-height: 100vh;
+    min-height: calc(100vh - 80px); /* Ajustado para compensar el header */
     box-sizing: border-box;
+    padding-bottom: 40px;
 }
-.navbar-apunte {
+.header-acciones-apunte {
+    max-width: 850px;
+    margin: 30px auto 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #0d161f;
-    padding: 15px 40px;
-    border-bottom: 1px solid #1a2633;
+    padding: 0 10px;
 }
 .contenido-pagina-apunte {
     max-width: 850px;
-    margin: 40px auto;
+    margin: 20px auto;
     background-color: var(--card-bg);
     border: 2px solid var(--border-green);
     border-radius: 16px;
@@ -334,6 +335,11 @@ body {
 /* ==========================================================================
    VISTA DE PUBLICACIÓN (MODO EDITOR COMPLETO)
    ========================================================================== */
+#vista-publicar-completo {
+    background-color: #0a0f16; 
+    min-height: calc(100vh - 80px); 
+    padding-top: 1px;
+}
 .contenedor-formulario-grande input:focus, 
 .contenedor-formulario-grande textarea:focus, 
 .contenedor-formulario-grande select:focus {
