@@ -19,7 +19,9 @@ body {
     min-height: 100vh;
 }
 
-/* Navbar */
+/* ==========================================================================
+   NAVBAR & LOGO
+   ========================================================================== */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -35,7 +37,9 @@ body {
 .nav-links a { color: var(--text-gray); text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 20px; }
 .nav-links a.active { background-color: #173630; color: var(--accent-green); }
 
-/* Contenedor del Perfil e Interactividad Dropdown */
+/* ==========================================================================
+   PERFIL DE USUARIO & DROPDOWN
+   ========================================================================== */
 .user-profile { 
     display: flex; 
     align-items: center; 
@@ -53,7 +57,6 @@ body {
 .arrow { font-size: 11px; color: var(--text-gray); transition: 0.2s; }
 .notification { font-size: 16px; margin-left: 5px; }
 
-/* RECUADRO FLOTANTE (Dropdown) */
 .dropdown-menu {
     display: none; 
     position: absolute;
@@ -68,8 +71,6 @@ body {
     z-index: 1000;
     cursor: default; 
 }
-
-/* Elementos internos del Recuadro */
 .menu-title {
     margin: 0 0 12px 0;
     font-size: 14px;
@@ -77,7 +78,6 @@ body {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
-
 .dropdown-menu input, 
 .dropdown-menu textarea, 
 .dropdown-menu select {
@@ -92,7 +92,6 @@ body {
     box-sizing: border-box;
     font-family: inherit;
 }
-
 .dropdown-menu input:focus, 
 .dropdown-menu textarea:focus, 
 .dropdown-menu select:focus {
@@ -100,7 +99,9 @@ body {
     outline: none;
 }
 
-/* Botones del Recuadro */
+/* ==========================================================================
+   BOTONES GLOBALES
+   ========================================================================== */
 .btn-menu-action {
     width: 100%;
     padding: 10px;
@@ -116,7 +117,6 @@ body {
 .btn-menu-action:hover {
     background-color: #d46b37;
 }
-
 .btn-green {
     background-color: #1f5e49;
     border: 1px solid var(--accent-green);
@@ -126,13 +126,6 @@ body {
     background-color: var(--accent-green);
     color: var(--bg-dark);
 }
-
-.menu-divider {
-    border: 0;
-    border-top: 1px solid #283a4e;
-    margin: 15px 0 10px 0;
-}
-
 .btn-logout-link {
     background: transparent;
     border: none;
@@ -146,8 +139,26 @@ body {
 .btn-logout-link:hover {
     text-decoration: underline;
 }
+.btn-regresar {
+    background: transparent;
+    border: 1px solid var(--orange-accent);
+    color: var(--orange-accent);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-regresar:hover {
+    background-color: var(--orange-accent);
+    color: #ffffff;
+}
 
-/* Contenedor */
+/* ==========================================================================
+   DASHBOARD PRINCIPAL (GRID)
+   ========================================================================== */
 .dashboard-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -155,8 +166,6 @@ body {
     padding: 40px;
     flex-grow: 1;
 }
-
-/* Tarjeta Principal */
 .main-card {
     background-color: var(--card-bg);
     border: 2px solid var(--border-green);
@@ -193,7 +202,7 @@ body {
 }
 .btn-consultar:hover { background: var(--orange-accent); color: white; }
 
-/* Sidebar */
+/* BARRA LATERAL (SIDEBAR) */
 .sidebar {
     background-color: var(--sidebar-bg);
     border-radius: 16px;
@@ -221,34 +230,110 @@ body {
     z-index: 0; pointer-events: none;
 }
 
-/* Footer */
+/* MISCELÁNEOS */
+.menu-divider {
+    border: 0;
+    border-top: 1px solid #283a4e;
+    margin: 15px 0 10px 0;
+}
 .footer-credits { text-align: right; padding: 20px 40px; font-size: 12px; color: var(--text-gray); }
 
+/* ==========================================================================
+   VISTA INTERACTIVA DE LECTURA (CONSULTAR APUNTE)
+   ========================================================================== */
+#vista-apunte-completo {
+    background-color: var(--bg-dark);
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+.navbar-apunte {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0d161f;
+    padding: 15px 40px;
+    border-bottom: 1px solid #1a2633;
+}
+.contenido-pagina-apunte {
+    max-width: 850px;
+    margin: 40px auto;
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-green);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.5);
+}
+.apunte-gran-titulo {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: var(--text-white);
+    line-height: 1.3;
+}
+.apunte-gran-fecha {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin: 0 0 20px 0;
+}
+.divisor-apunte {
+    border: 0;
+    border-top: 1px solid #283a4e;
+    margin-bottom: 25px;
+}
+
+/* Clases Inyectadas dinámicamente por JavaScript */
+.apunte-parrafo {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #d1d5db;
+    margin-bottom: 20px;
+}
+.apunte-subtitulo-h3 {
+    font-size: 20px;
+    color: var(--accent-green);
+    margin: 30px 0 15px 0;
+    font-weight: 600;
+}
+.apunte-item-lista {
+    font-size: 15px;
+    color: #d1d5db;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    list-style-type: square;
+}
+
+/* Tablas generadas automáticamente mediante parser ("|") */
+.contenedor-cuadro-academico {
+    margin: 25px 0;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-green);
+}
+.tabla-datos {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #0f172a;
+    font-size: 14px;
+    text-align: left;
+}
+.tabla-datos th {
+    background-color: #173630;
+    color: var(--accent-green);
+    padding: 12px;
+    font-weight: 600;
+}
+.tabla-datos td {
+    padding: 12px;
+    color: var(--text-white);
+    border-bottom: 1px solid #1e293b;
+}
+.tabla-datos tr:last-child td {
+    border-bottom: none;
+}
 
 /* ==========================================================================
-   ESTILOS ADICIONALES PARA LA VISTA DE PUBLICACIÓN EN PANTALLA COMPLETA
+   VISTA DE PUBLICACIÓN (MODO EDITOR COMPLETO)
    ========================================================================== */
-
-/* Botón reutilizado para cancelar/volver desde las cabeceras */
-.btn-regresar {
-    background: transparent;
-    border: 1px solid var(--orange-accent);
-    color: var(--orange-accent);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    transition: background 0.2s, color 0.2s;
-}
-
-.btn-regresar:hover {
-    background-color: var(--orange-accent);
-    color: #ffffff;
-}
-
-/* Clases específicas de maquetación del formulario estructurado */
 .contenedor-formulario-grande input:focus, 
 .contenedor-formulario-grande textarea:focus, 
 .contenedor-formulario-grande select:focus {
@@ -256,8 +341,6 @@ body {
     outline: none;
     box-shadow: 0 0 8px rgba(0, 223, 137, 0.2);
 }
-
-/* Efecto hover suave para el botón de confirmación en Neon */
 .contenedor-formulario-grande button[type="submit"]:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(0, 223, 137, 0.25);

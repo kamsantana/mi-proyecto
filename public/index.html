@@ -5,6 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YAVIRAC - Arquitectura</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Estilos rápidos de integración nativa para la vista de lectura limpia */
+        #vista-apunte-completo {
+            background-color: var(--bg-dark);
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .navbar-apunte {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d161f;
+            padding: 15px 40px;
+            border-bottom: 1px solid #1a2633;
+        }
+        .contenido-pagina-apunte {
+            max-width: 850px;
+            margin: 40px auto;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-green);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .apunte-gran-titulo {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--text-white);
+        }
+        .apunte-gran-fecha {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin: 0 0 20px 0;
+        }
+        .divisor-apunte {
+            border-top: 1px solid #283a4e;
+            margin-bottom: 25px;
+        }
+        /* Clases dinámicas inyectadas por tu script */
+        .apunte-parrafo {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #d1d5db;
+            margin-bottom: 20px;
+        }
+        .apunte-subtitulo-h3 {
+            font-size: 20px;
+            color: var(--accent-green);
+            margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+        .apunte-item-lista {
+            font-size: 15px;
+            color: #d1d5db;
+            margin-left: 20px;
+            margin-bottom: 10px;
+            list-style-type: square;
+        }
+        /* Tablas y Cuadros Académicos generados con el operador '|' */
+        .contenedor-cuadro-academico {
+            margin: 25px 0;
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-green);
+        }
+        .tabla-datos {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #0f172a;
+            font-size: 14px;
+            text-align: left;
+        }
+        .tabla-datos th {
+            background-color: #173630;
+            color: var(--accent-green);
+            padding: 12px;
+            font-weight: 600;
+        }
+        .tabla-datos td {
+            padding: 12px;
+            color: var(--text-white);
+            border-bottom: 1px solid #1e293b;
+        }
+        .tabla-datos tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
 
@@ -73,11 +161,11 @@
     <div id="vista-apunte-completo" style="display: none;">
         <header class="navbar-apunte">
             <button class="btn-regresar" onclick="regresarAlDashboard()">⬅ Volver al Dashboard</button>
-            <span class="badge-apunte" id="apunte-pagina-categoria">TEORÍA</span>
+            <span class="badge" id="apunte-pagina-categoria">TEORÍA</span>
         </header>
         
         <div class="contenido-pagina-apunte">
-            <h1 id="apunte-pagina-titulo" class="apunte-gran-titulo">Semana 1: Pilares de la Arquitectura</h1>
+            <h1 id="apunte-pagina-titulo" class="apunte-gran-titulo">Cargando Título...</h1>
             <p id="apunte-pagina-fecha" class="apunte-gran-fecha">Cargando fecha...</p>
             <div class="divisor-apunte"></div>
             
@@ -289,7 +377,6 @@
             window.scrollTo(0, 0);
         }
 
-        // --- ENRUTAMIENTO DE VISTAS (DASHBOARD <-> PUBLICAR) ---
         function mostrarPaginaPublicar() {
             document.getElementById('sitio-principal').style.display = 'none';
             document.getElementById('vista-apunte-completo').style.display = 'none';
