@@ -78,9 +78,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.5px;
 }
-.dropdown-menu input, 
-.dropdown-menu textarea, 
-.dropdown-menu select {
+.dropdown-menu input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -92,9 +90,7 @@ body {
     box-sizing: border-box;
     font-family: inherit;
 }
-.dropdown-menu input:focus, 
-.dropdown-menu textarea:focus, 
-.dropdown-menu select:focus {
+.dropdown-menu input:focus {
     border-color: var(--accent-green);
     outline: none;
 }
@@ -241,9 +237,48 @@ body {
 .footer-credits { text-align: right; padding: 20px 40px; font-size: 12px; color: var(--text-gray); }
 
 /* ==========================================================================
-   VISTA INTERACTIVA DE LECTURA (CLASES DINÁMICAS)
+   VISTA INTERACTIVA DE LECTURA DE APUNTES
    ========================================================================== */
-/* Nota: Las vistas base estructurales están controladas nativamente por el HTML */
+#vista-apunte-completo {
+    background-color: var(--bg-dark);
+    min-height: calc(100vh - 80px);
+    box-sizing: border-box;
+    padding-bottom: 40px;
+}
+.header-acciones-apunte {
+    max-width: 850px;
+    margin: 30px auto 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+.contenido-pagina-apunte {
+    max-width: 850px;
+    margin: 20px auto;
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-green);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+}
+.apunte-gran-titulo {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: var(--text-white);
+}
+.apunte-gran-fecha {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin: 0 0 20px 0;
+}
+.divisor-apunte {
+    border: 0;
+    border-top: 1px solid #283a4e;
+    margin-bottom: 25px;
+}
 .apunte-parrafo {
     font-size: 15px;
     line-height: 1.7;
@@ -264,25 +299,163 @@ body {
     list-style-type: square;
 }
 
+/* TABLAS Y CUADROS ACADÉMICOS (SOPORTE DEL OPERADOR '|') */
+.contenedor-cuadro-academico {
+    margin: 25px 0;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-green);
+}
+.tabla-datos {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #0f172a;
+    font-size: 14px;
+    text-align: left;
+}
+.tabla-datos th {
+    background-color: #173630;
+    color: var(--accent-green);
+    padding: 12px;
+    font-weight: 600;
+}
+.tabla-datos td {
+    padding: 12px;
+    color: var(--text-white);
+    border-bottom: 1px solid #1e293b;
+}
+.tabla-datos tr:last-child td {
+    border-bottom: none;
+}
+
 /* ==========================================================================
-   VISTA DE PUBLICACIÓN (MODO EDITOR COMPLETO)
+   VISTA DE PUBLICACIÓN (MODO EDITOR COMPLETO SIN ESTILOS INLINE)
    ========================================================================== */
 #vista-publicar-completo {
     background-color: #0a0f16; 
     min-height: calc(100vh - 80px); 
-    padding-top: 1px;
+    padding: 40px 20px;
+    box-sizing: border-box;
 }
-.contenedor-formulario-grande input:focus, 
-.contenedor-formulario-grande textarea:focus, 
-.contenedor-formulario-grande select:focus {
+.contenedor-formulario-grande {
+    max-width: 850px;
+    margin: 0 auto;
+    background-color: #141c26;
+    border: 1px solid var(--border-green);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+}
+.form-header {
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.form-header h2 {
+    font-size: 24px;
+    color: #fff;
+    margin: 0 0 5px 0;
+}
+.form-header p {
+    color: #94a3b8;
+    font-size: 14px;
+    margin: 0;
+}
+.btn-cancelar {
+    border: 1px solid #ef4444 !important;
+    color: #ef4444 !important;
+}
+.btn-cancelar:hover {
+    background-color: #ef4444 !important;
+    color: #fff !important;
+}
+.grid-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.form-group label {
+    font-size: 11px;
+    color: var(--accent-green);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.grid-form input,
+.grid-form select,
+.grid-form textarea {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 12px;
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.grid-form textarea {
+    resize: vertical;
+    line-height: 1.6;
+}
+.grid-form input:focus, 
+.grid-form select:focus, 
+.grid-form textarea:focus {
     border-color: var(--accent-green) !important;
     outline: none;
     box-shadow: 0 0 8px rgba(0, 223, 137, 0.2);
 }
-.contenedor-formulario-grande button[type="submit"] {
+.col-span-2 {
+    grid-column: span 2;
+}
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+.btn-submit {
+    background: linear-gradient(135deg, var(--border-green), var(--accent-green));
+    color: #020617;
+    border: none;
+    padding: 14px 35px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
     transition: transform 0.2s, box-shadow 0.2s;
 }
-.contenedor-formulario-grande button[type="submit"]:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 223, 137, 0.25);
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 223, 137, 0.3);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (SOPORTE PARA MÓVILES)
+   ========================================================================== */
+@media (max-width: 900px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+    .navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    .grid-form {
+        grid-template-columns: 1fr;
+    }
+    .col-span-2 {
+        grid-column: span 1;
+    }
 }

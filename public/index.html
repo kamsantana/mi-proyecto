@@ -5,95 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YAVIRAC - Gestión Académica</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Estilos de integración nativa para la vista de lectura limpia */
-        #vista-apunte-completo {
-            background-color: var(--bg-dark);
-            min-height: calc(100vh - 80px);
-            box-sizing: border-box;
-            padding-bottom: 40px;
-        }
-        .header-acciones-apunte {
-            max-width: 850px;
-            margin: 30px auto 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .contenido-pagina-apunte {
-            max-width: 850px;
-            margin: 20px auto;
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-green);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.5);
-        }
-        .apunte-gran-titulo {
-            font-size: 36px;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            color: var(--text-white);
-        }
-        .apunte-gran-fecha {
-            color: var(--text-gray);
-            font-size: 14px;
-            margin: 0 0 20px 0;
-        }
-        .divisor-apunte {
-            border: 0;
-            border-top: 1px solid #283a4e;
-            margin-bottom: 25px;
-        }
-        /* Clases dinámicas inyectadas por el script */
-        .apunte-parrafo {
-            font-size: 15px;
-            line-height: 1.7;
-            color: #d1d5db;
-            margin-bottom: 20px;
-        }
-        .apunte-subtitulo-h3 {
-            font-size: 20px;
-            color: var(--accent-green);
-            margin: 30px 0 15px 0;
-            font-weight: 600;
-        }
-        .apunte-item-lista {
-            font-size: 15px;
-            color: #d1d5db;
-            margin-left: 20px;
-            margin-bottom: 10px;
-            list-style-type: square;
-        }
-        /* Tablas y Cuadros Académicos generados con el operador '|' */
-        .contenedor-cuadro-academico {
-            margin: 25px 0;
-            overflow-x: auto;
-            border-radius: 8px;
-            border: 1px solid var(--border-green);
-        }
-        .tabla-datos {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #0f172a;
-            font-size: 14px;
-            text-align: left;
-        }
-        .tabla-datos th {
-            background-color: #173630;
-            color: var(--accent-green);
-            padding: 12px;
-            font-weight: 600;
-        }
-        .tabla-datos td {
-            padding: 12px;
-            color: var(--text-white);
-            border-bottom: 1px solid #1e293b;
-        }
-        .tabla-datos tr:last-child td {
-            border-bottom: none;
-        }
-    </style>
 </head>
 <body>
 
@@ -106,11 +17,9 @@
             </div>
         </div>
         <nav class="nav-links">
-            <a href="#" id="nav-inicio" class="active" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
-            <a href="#" id="nav-arquitectura" onclick="cambiarSeccion('arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
-            <a href="#" id="nav-calidad" onclick="cambiarSeccion('calidad', this)">✔️ CALIDAD DE SOFTWARE</a>
-            <a href="#">👤 Perfil</a>
-            <a href="#">⚙️ Ajustes</a>
+            <a href="#" id="nav-inicio" class="active" onclick="cambiarSeccion(event, 'inicio', this)">🏠 Inicio</a>
+            <a href="#" id="nav-arquitectura" onclick="cambiarSeccion(event, 'arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
+            <a href="#" id="nav-calidad" onclick="cambiarSeccion(event, 'calidad', this)">✔️ CALIDAD DE SOFTWARE</a>
         </nav>
         
         <div class="user-profile" onclick="toggleMenuPerfil(event)">
@@ -130,7 +39,7 @@
 
                 <div id="box-publicar-estado" style="display: none;">
                     <h4 class="menu-title">✍️ Gestión de Contenido</h4>
-                    <button type="button" onclick="mostrarPaginaPublicar()" class="btn-menu-action btn-green" style="text-align: center; font-weight: bold;">✍️ Redactar en Grande</button>
+                    <button type="button" onclick="mostrarPaginaPublicar()" class="btn-menu-action btn-green">✍️ Redactar en Grande</button>
                     <hr class="menu-divider">
                     <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
                 </div>
@@ -174,52 +83,52 @@
         </article>
     </div>
 
-    <div id="vista-publicar-completo" style="display: none; background-color: #0a0f16; min-height: calc(100vh - 80px); padding-top: 1px;">
-        <div class="contenedor-formulario-grande" style="max-width: 850px; margin: 40px auto; background-color: #141c26; border: 1px solid #1f5e49; border-radius: 16px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-            <div style="margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-start;">
+    <div id="vista-publicar-completo" style="display: none;">
+        <div class="contenedor-formulario-grande">
+            <div class="form-header">
                 <div>
-                    <h2 style="font-size: 24px; color: #fff; margin: 0 0 5px 0;">🚀 Publicar Artículo Académico</h2>
-                    <p style="color: #94a3b8; font-size: 14px; margin: 0;">Sincronización nativa y directa hacia la base de datos de Neon Console</p>
+                    <h2>🚀 Publicar Artículo Académico</h2>
+                    <p>Sincronización nativa y directa hacia la base de datos de Neon Console</p>
                 </div>
-                <button type="button" class="btn-regresar" style="border: 1px solid #ef4444; color: #ef4444;" onclick="regresarAlDashboard()">❌ Cancelar</button>
+                <button type="button" class="btn-regresar btn-cancelar" onclick="regresarAlDashboard()">❌ Cancelar</button>
             </div>
 
-            <form onsubmit="procesarPublicacion(event)" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Asignatura / Sección</label>
-                    <select id="pub-seccion" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" required>
+            <form onsubmit="procesarPublicacion(event)" class="grid-form">
+                <div class="form-group">
+                    <label>Asignatura / Sección</label>
+                    <select id="pub-seccion" required>
                         <option value="arquitectura">Materia: Arquitectura de Software</option>
                         <option value="calidad">Materia: Calidad de Software</option>
                     </select>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Identificador Temporal</label>
-                    <input type="text" id="pub-semana" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Ej: Semana 3" required>
+                <div class="form-group">
+                    <label>Identificador Temporal</label>
+                    <input type="text" id="pub-semana" placeholder="Ej: Semana 3" required>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px; grid-column: span 2;">
-                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Título del Artículo</label>
-                    <input type="text" id="pub-titulo" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Nombre principal del tema académico" required>
+                <div class="form-group col-span-2">
+                    <label>Título del Artículo</label>
+                    <input type="text" id="pub-titulo" placeholder="Nombre principal del tema académico" required>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Subtítulo o Resumen Corto</label>
-                    <input type="text" id="pub-subtitulo" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Breve abstract del apunte" required>
+                <div class="form-group">
+                    <label>Subtítulo o Resumen Corto</label>
+                    <input type="text" id="pub-subtitulo" placeholder="Breve abstract del apunte" required>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Categoría del Documento</label>
-                    <input type="text" id="pub-categoria" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; color: white; font-family: inherit;" placeholder="Ej: TEORÍA / PRÁCTICA" required>
+                <div class="form-group">
+                    <label>Categoría del Documento</label>
+                    <input type="text" id="pub-categoria" placeholder="Ej: TEORÍA / PRÁCTICA" required>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 8px; grid-column: span 2;">
-                    <label style="font-size: 11px; color: #00df89; font-weight: bold; text-transform: uppercase;">Desarrollo del Contenido Académico</label>
-                    <textarea id="pub-contenido" style="background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 15px; color: white; font-family: inherit; resize: vertical; line-height: 1.6;" rows="10" placeholder="Escribe el cuerpo completo aquí... Recuerda que puedes usar '|' para generar cuadros tabulares automáticamente." required></textarea>
+                <div class="form-group col-span-2">
+                    <label>Desarrollo del Contenido Académico</label>
+                    <textarea id="pub-contenido" rows="10" placeholder="Escribe el cuerpo completo aquí... Recuerda que puedes usar '|' para generar cuadros tabulares automáticamente." required></textarea>
                 </div>
 
-                <div style="grid-column: span 2; display: flex; justify-content: flex-end; margin-top: 10px;">
-                    <button type="submit" style="background: linear-gradient(135deg, #1f5e49, #00df89); color: #020617; border: none; padding: 14px 35px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s;">🚀 Confirmar Publicación en Neon</button>
+                <div class="form-actions col-span-2">
+                    <button type="submit" class="btn-submit">🚀 Confirmar Publicación en Neon</button>
                 </div>
             </form>
         </div>
@@ -261,7 +170,6 @@
 
             datosFiltrados = datosApuntes.filter(item => (item.seccion || 'arquitectura').toLowerCase() === seccion.toLowerCase());
             
-            // Ordenar de forma natural por número de semana (Semana 1 a Semana 9)
             datosFiltrados.sort((a, b) => {
                 const numA = parseInt(a.semana.replace(/\D/g, '')) || 0;
                 const numB = parseInt(b.semana.replace(/\D/g, '')) || 0;
@@ -285,13 +193,12 @@
             document.querySelector('.btn-consultar').style.display = 'block';
 
             datosFiltrados.forEach((item, indice) => {
-                const itemHtml = `
+                sidebarList.insertAdjacentHTML('beforeend', `
                     <div class="sidebar-item ${indice === 0 ? 'active' : ''}" onclick="seleccionarArticulo(${indice}, event)">
-                        <h3>${item.semana}: ${item.titulo.split(': ')[1] || item.titulo}</h3>
+                        <h3>${item.semana}: ${item.titulo}</h3>
                         <p>${item.subtitulo}</p>
                     </div>
-                `;
-                sidebarList.insertAdjacentHTML('beforeend', itemHtml);
+                `);
             });
 
             renderizarTarjeta(0);
@@ -303,7 +210,7 @@
             
             articuloSeleccionadoIndex = indice;
             document.getElementById('card-category').innerText = data.categoria.toUpperCase();
-            document.getElementById('card-title').innerText = data.titulo;
+            document.getElementById('card-title').innerText = `${data.semana}: ${data.titulo}`;
             document.getElementById('card-subtitle').innerText = data.subtitulo;
             document.getElementById('card-text').innerText = data.contenido.substring(0, 140) + "... (clic en consultar para ver completo)";
             document.getElementById('card-date').innerText = data.fecha;
@@ -315,7 +222,7 @@
             renderizarTarjeta(indice);
         }
 
-        function cambiarSeccion(seccion, elementoNav) {
+        function cambiarSeccion(event, seccion, elementoNav) {
             if (event) event.preventDefault();
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             elementoNav.classList.add('active');
@@ -328,7 +235,7 @@
             if(!data) return;
 
             document.getElementById('apunte-pagina-categoria').innerText = data.categoria.toUpperCase();
-            document.getElementById('apunte-pagina-titulo').innerText = data.titulo;
+            document.getElementById('apunte-pagina-titulo').innerText = `${data.semana}: ${data.titulo}`;
             document.getElementById('apunte-pagina-fecha').innerText = data.fecha;
 
             const cuerpoApunte = document.getElementById('apunte-pagina-cuerpo');
@@ -357,7 +264,7 @@
                     if (limpia !== "") {
                         if (limpia.startsWith('###')) {
                             htmlFinal += `<h3 class="apunte-subtitulo-h3">${limpia.replace('###', '')}</h3>`;
-                        } else if (limpia.startsWith('-')) {
+                        } else if (limpia.startsWith('-') || limpia.startsWith('*')) {
                             htmlFinal += `<li class="apunte-item-lista">${limpia.substring(1).trim()}</li>`;
                         } else {
                             htmlFinal += `<p class="apunte-parrafo">${limpia}</p>`;
@@ -425,7 +332,7 @@
             const nuevoArticulo = {
                 seccion: document.getElementById('pub-seccion').value,
                 semana: document.getElementById('pub-semana').value,
-                titulo: document.getElementById('pub-semana').value + ": " + document.getElementById('pub-titulo').value,
+                titulo: document.getElementById('pub-titulo').value, // Titulo limpio
                 subtitulo: document.getElementById('pub-subtitulo').value,
                 categoria: document.getElementById('pub-categoria').value,
                 contenido: document.getElementById('pub-contenido').value,
