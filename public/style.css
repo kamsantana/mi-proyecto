@@ -34,7 +34,7 @@ body {
 .logo-sub { font-size: 11px; color: var(--text-gray); margin: 0; }
 .logo-main { font-size: 22px; margin: 0; font-weight: bold; letter-spacing: 1px; }
 .nav-links { display: flex; gap: 20px; }
-.nav-links a { color: var(--text-gray); text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 20px; }
+.nav-links a { color: var(--text-gray); text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 20px; transition: background 0.2s, color 0.2s; }
 .nav-links a.active { background-color: #173630; color: var(--accent-green); }
 
 /* ==========================================================================
@@ -218,7 +218,9 @@ body {
     border-radius: 8px;
     cursor: pointer;
     border-bottom: 1px solid #283a4e;
+    transition: background 0.2s;
 }
+.sidebar-item:hover { background-color: #24374b66; }
 .sidebar-item.active { background-color: #24374b; }
 .sidebar-item h3 { font-size: 15px; margin: 0 0 5px 0; color: #fff; }
 .sidebar-item p { font-size: 13px; margin: 0; color: var(--text-gray); }
@@ -239,50 +241,9 @@ body {
 .footer-credits { text-align: right; padding: 20px 40px; font-size: 12px; color: var(--text-gray); }
 
 /* ==========================================================================
-   VISTA INTERACTIVA DE LECTURA (CONSULTAR APUNTE)
+   VISTA INTERACTIVA DE LECTURA (CLASES DINÁMICAS)
    ========================================================================== */
-#vista-apunte-completo {
-    background-color: var(--bg-dark);
-    min-height: calc(100vh - 80px); /* Ajustado para compensar el header */
-    box-sizing: border-box;
-    padding-bottom: 40px;
-}
-.header-acciones-apunte {
-    max-width: 850px;
-    margin: 30px auto 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-}
-.contenido-pagina-apunte {
-    max-width: 850px;
-    margin: 20px auto;
-    background-color: var(--card-bg);
-    border: 2px solid var(--border-green);
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.5);
-}
-.apunte-gran-titulo {
-    font-size: 36px;
-    font-weight: 700;
-    margin: 0 0 10px 0;
-    color: var(--text-white);
-    line-height: 1.3;
-}
-.apunte-gran-fecha {
-    color: var(--text-gray);
-    font-size: 14px;
-    margin: 0 0 20px 0;
-}
-.divisor-apunte {
-    border: 0;
-    border-top: 1px solid #283a4e;
-    margin-bottom: 25px;
-}
-
-/* Clases Inyectadas dinámicamente por JavaScript */
+/* Nota: Las vistas base estructurales están controladas nativamente por el HTML */
 .apunte-parrafo {
     font-size: 15px;
     line-height: 1.7;
@@ -303,35 +264,6 @@ body {
     list-style-type: square;
 }
 
-/* Tablas generadas automáticamente mediante parser ("|") */
-.contenedor-cuadro-academico {
-    margin: 25px 0;
-    overflow-x: auto;
-    border-radius: 8px;
-    border: 1px solid var(--border-green);
-}
-.tabla-datos {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #0f172a;
-    font-size: 14px;
-    text-align: left;
-}
-.tabla-datos th {
-    background-color: #173630;
-    color: var(--accent-green);
-    padding: 12px;
-    font-weight: 600;
-}
-.tabla-datos td {
-    padding: 12px;
-    color: var(--text-white);
-    border-bottom: 1px solid #1e293b;
-}
-.tabla-datos tr:last-child td {
-    border-bottom: none;
-}
-
 /* ==========================================================================
    VISTA DE PUBLICACIÓN (MODO EDITOR COMPLETO)
    ========================================================================== */
@@ -346,6 +278,9 @@ body {
     border-color: var(--accent-green) !important;
     outline: none;
     box-shadow: 0 0 8px rgba(0, 223, 137, 0.2);
+}
+.contenedor-formulario-grande button[type="submit"] {
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 .contenedor-formulario-grande button[type="submit"]:hover {
     transform: translateY(-1px);

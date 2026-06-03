@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YAVIRAC - Arquitectura</title>
+    <title>YAVIRAC - Gestión Académica</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Estilos rápidos de integración nativa para la vista de lectura limpia */
+        /* Estilos de integración nativa para la vista de lectura limpia */
         #vista-apunte-completo {
             background-color: var(--bg-dark);
             min-height: calc(100vh - 80px);
@@ -45,7 +45,7 @@
             border-top: 1px solid #283a4e;
             margin-bottom: 25px;
         }
-        /* Clases dinámicas inyectadas por tu script */
+        /* Clases dinámicas inyectadas por el script */
         .apunte-parrafo {
             font-size: 15px;
             line-height: 1.7;
@@ -106,8 +106,8 @@
             </div>
         </div>
         <nav class="nav-links">
-            <a href="#" id="nav-inicio" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
-            <a href="#" id="nav-arquitectura" class="active" onclick="cambiarSeccion('arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
+            <a href="#" id="nav-inicio" class="active" onclick="cambiarSeccion('inicio', this)">🏠 Inicio</a>
+            <a href="#" id="nav-arquitectura" onclick="cambiarSeccion('arquitectura', this)">🌐 ARQUITECTURA DE SOFTWARE</a>
             <a href="#" id="nav-calidad" onclick="cambiarSeccion('calidad', this)">✔️ CALIDAD DE SOFTWARE</a>
             <a href="#">👤 Perfil</a>
             <a href="#">⚙️ Ajustes</a>
@@ -140,19 +140,21 @@
 
     <main class="dashboard-container" id="sitio-principal">
         <section class="main-card" id="main-card">
-            <span class="badge" id="card-category">CARGANDO...</span>
-            <h2 class="card-title" id="card-title">Selecciona un tema</h2>
-            <h3 class="card-subtitle" id="card-subtitle">Por favor espera</h3>
-            <p class="card-text" id="card-text">Cargando la información desde Neon Console...</p>
+            <span class="badge" id="card-category">BIENVENIDO</span>
+            <h2 class="card-title" id="card-title">Repositorio Académico Yavirac</h2>
+            <h3 class="card-subtitle" id="card-subtitle">Elige una asignatura arriba</h3>
+            <p class="card-text" id="card-text">Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes cargados en tiempo real.</p>
             
             <div class="card-footer">
-                <span class="date" id="card-date">-- de -- de ----</span>
-                <button class="btn-consultar" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
+                <span class="date" id="card-date">Hoy</span>
+                <button class="btn-consultar" style="display: none;" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
             </div>
         </section>
 
         <aside class="sidebar">
-            <div id="sidebar-list"></div>
+            <div id="sidebar-list">
+                <p style="color: #8ca0b3; padding: 15px; font-size: 14px;">Selecciona una materia en el menú superior para ver sus artículos.</p>
+            </div>
             <div class="watermark-logo">YAVIRAC</div>
         </aside>
     </main>
@@ -228,7 +230,7 @@
     <script>
         let datosApuntes = [];     
         let datosFiltrados = [];   
-        let seccionActual = 'arquitectura'; 
+        let seccionActual = 'inicio'; 
         let sesionActiva = localStorage.getItem('isLoggedIn') === 'true';
         let articuloSeleccionadoIndex = 0;
 
@@ -258,6 +260,14 @@
             }
 
             datosFiltrados = datosApuntes.filter(item => (item.seccion || 'arquitectura').toLowerCase() === seccion.toLowerCase());
+            
+            // Ordenar de forma natural por número de semana (Semana 1 a Semana 9)
+            datosFiltrados.sort((a, b) => {
+                const numA = parseInt(a.semana.replace(/\D/g, '')) || 0;
+                const numB = parseInt(b.semana.replace(/\D/g, '')) || 0;
+                return numA - numB;
+            });
+
             const sidebarList = document.getElementById('sidebar-list');
             sidebarList.innerHTML = '';
 
@@ -306,10 +316,10 @@
         }
 
         function cambiarSeccion(seccion, elementoNav) {
-            event.preventDefault();
+            if (event) event.preventDefault();
             document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             elementoNav.classList.add('active');
-            regresarAlDashboard(); // Si estaba leyendo un apunte, vuelve al dashboard al cambiar de materia
+            regresarAlDashboard(); 
             filtrarYMostrar(seccion);
         }
 
@@ -359,7 +369,6 @@
             if (enTabla) htmlFinal += `</tbody></table></div>`;
             cuerpoApunte.innerHTML = htmlFinal;
 
-            // Transición de vistas sin perder el Header superior
             document.getElementById('sitio-principal').style.display = 'none';
             document.getElementById('vista-publicar-completo').style.display = 'none';
             document.getElementById('vista-apunte-completo').style.display = 'block';
@@ -377,7 +386,7 @@
         function regresarAlDashboard() {
             document.getElementById('vista-apunte-completo').style.display = 'none';
             document.getElementById('vista-publicar-completo').style.display = 'none';
-            document.getElementById('sitio-principal').style.display = 'grid'; // Retorna al diseño de rejilla original
+            document.getElementById('sitio-principal').style.display = 'grid'; 
         }
 
         function toggleMenuPerfil(event) {
