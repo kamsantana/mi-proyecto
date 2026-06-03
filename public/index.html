@@ -56,7 +56,10 @@
             
             <div class="card-footer">
                 <span class="date" id="card-date">Hoy</span>
-                <button class="btn-consultar" style="display: none;" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
+                <div style="display: flex; gap: 10px;">
+                    <button id="btn-eliminar-dashboard" class="btn-regresar btn-cancelar" style="display: none;" onclick="eliminarArticuloActual()">🗑️ Eliminar</button>
+                    <button class="btn-consultar" id="btn-consultar-trigger" style="display: none;" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
+                </div>
             </div>
         </section>
 
@@ -71,7 +74,10 @@
     <div id="vista-apunte-completo" style="display: none;">
         <div class="header-acciones-apunte">
             <button class="btn-regresar" onclick="regresarAlDashboard()">← VOLVER AL LISTADO</button>
-            <span class="badge" id="apunte-pagina-categoria">TEORÍA</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button id="btn-eliminar-lectura" class="btn-regresar btn-cancelar" style="display: none;" onclick="eliminarArticuloActual()">🗑️ Eliminar Semana</button>
+                <span class="badge" id="apunte-pagina-categoria">TEORÍA</span>
+            </div>
         </div>
         
         <article class="contenido-pagina-apunte">
@@ -164,7 +170,7 @@
                 document.getElementById('card-subtitle').innerText = "Elige una asignatura arriba";
                 document.getElementById('card-text').innerText = "Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes cargados en tiempo real.";
                 document.getElementById('card-date').innerText = "Hoy";
-                document.querySelector('.btn-consultar').style.display = 'none';
+                document.getElementById('btn-consultar-trigger').style.display = 'none';
                 return;
             }
 
@@ -186,11 +192,11 @@
                 document.getElementById('card-subtitle').innerText = "Sección en desarrollo";
                 document.getElementById('card-text').innerText = "Aún no se han registrado artículos para esta sección en Neon Console.";
                 document.getElementById('card-date').innerText = "--";
-                document.querySelector('.btn-consultar').style.display = 'none';
+                document.getElementById('btn-consultar-trigger').style.display = 'none';
                 return;
             }
 
-            document.querySelector('.btn-consultar').style.display = 'block';
+            document.getElementById('btn-consultar-trigger').style.display = 'block';
 
             datosFiltrados.forEach((item, indice) => {
                 sidebarList.insertAdjacentHTML('beforeend', `
@@ -332,7 +338,7 @@
             const nuevoArticulo = {
                 seccion: document.getElementById('pub-seccion').value,
                 semana: document.getElementById('pub-semana').value,
-                titulo: document.getElementById('pub-titulo').value, // Titulo limpio
+                titulo: document.getElementById('pub-titulo').value,
                 subtitulo: document.getElementById('pub-subtitulo').value,
                 categoria: document.getElementById('pub-categoria').value,
                 contenido: document.getElementById('pub-contenido').value,
@@ -357,6 +363,32 @@
             } catch (error) { alert('Error al publicar'); }
         }
 
+        // Nueva función encargada de ejecutar el DELETE hacia la API
+        async function eliminarArticuloActual() {
+            const data = datosFiltrados[articuloSeleccionadoIndex];
+            if (!data || !data.id) return alert("No se puede eliminar: ID del artículo no encontrado.");
+
+            const confirmar = confirm(`¿Estás seguro de que deseas eliminar permanentemente de Neon el artículo:\n"${data.semana}: ${data.titulo}"?`);
+            
+            if (confirmar) {
+                try {
+                    const res = await fetch(`/api/eliminar?id=${data.id}`, { method: 'DELETE' });
+                    const resultado = await res.json();
+                    
+                    if (resultado.success) {
+                        alert("Artículo eliminado correctamente.");
+                        regresarAlDashboard();
+                        cargarDatos(); // Actualiza la interfaz recargando desde la BD
+                    } else {
+                        alert("Error al intentar eliminar en la base de datos.");
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert("Error de red al procesar la solicitud.");
+                }
+            }
+        }
+
         function cerrarSesion() {
             localStorage.removeItem('isLoggedIn');
             sesionActiva = false;
@@ -366,12 +398,22 @@
         }
 
         function actualizarInterfazUsuario() {
+            const displayAdmin = sesionActiva ? 'block' : 'none';
+
             if (sesionActiva) {
                 document.getElementById('box-login-estado').style.display = 'none';
                 document.getElementById('box-publicar-estado').style.display = 'block';
             } else {
                 document.getElementById('box-login-estado').style.display = 'block';
                 document.getElementById('box-publicar-estado').style.display = 'none';
+            }
+
+            // Sincronizar dinámicamente visibilidad de botones de eliminación
+            if(document.getElementById('btn-eliminar-dashboard')) {
+                document.getElementById('btn-eliminar-dashboard').style.display = displayAdmin;
+            }
+            if(document.getElementById('btn-eliminar-lectura')) {
+                document.getElementById('btn-eliminar-lectura').style.display = displayAdmin;
             }
         }
 

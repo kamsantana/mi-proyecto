@@ -145,11 +145,23 @@ body {
     cursor: pointer;
     font-family: inherit;
     font-size: 13px;
-    transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .btn-regresar:hover {
     background-color: var(--orange-accent);
     color: #ffffff;
+}
+
+/* Botón personalizado de cancelación y eliminación avanzada */
+.btn-cancelar {
+    border: 1px solid #ef4444 !important;
+    color: #ef4444 !important;
+    background: transparent !important;
+}
+.btn-cancelar:hover {
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
 }
 
 /* ==========================================================================
@@ -364,14 +376,6 @@ body {
     color: #94a3b8;
     font-size: 14px;
     margin: 0;
-}
-.btn-cancelar {
-    border: 1px solid #ef4444 !important;
-    color: #ef4444 !important;
-}
-.btn-cancelar:hover {
-    background-color: #ef4444 !important;
-    color: #fff !important;
 }
 .grid-form {
     display: grid;
