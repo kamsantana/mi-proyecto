@@ -173,6 +173,7 @@ body {
     gap: 30px;
     padding: 40px;
     flex-grow: 1;
+    align-items: flex-start; /* Evita que las columnas se estiren para igualar alturas */
 }
 .main-card {
     background-color: var(--card-bg);
@@ -210,7 +211,7 @@ body {
 }
 .btn-consultar:hover { background: var(--orange-accent); color: white; }
 
-/* BARRA LATERAL (SIDEBAR) */
+/* BARRA LATERAL (SIDEBAR) CORREGIDA */
 .sidebar {
     background-color: var(--sidebar-bg);
     border-radius: 16px;
@@ -219,8 +220,26 @@ body {
     flex-direction: column;
     gap: 15px;
     position: relative;
-    overflow: hidden;
+    flex-shrink: 0; /* Congela su tamaño para que no colapse */
+    max-height: 80vh; /* Establece un límite de altura proporcional a la pantalla */
+    overflow-y: auto; /* Activa el scroll interno si los artículos sobrepasan la altura */
 }
+
+/* Estilización sutil del scrollbar de la barra lateral */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: #283a4e;
+    border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--border-green);
+}
+
 .sidebar-item {
     padding: 15px;
     border-radius: 8px;
@@ -311,6 +330,20 @@ body {
     list-style-type: square;
 }
 
+/* SOPORTE PARA BLOQUES DE CÓDIGO (MARKDOWN) */
+pre, code {
+    background-color: #0f172a;
+    border: 1px solid #1e293b;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    color: var(--accent-green);
+    display: block;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
 /* TABLAS Y CUADROS ACADÉMICOS (SOPORTE DEL OPERADOR '|') */
 .contenedor-cuadro-academico {
     margin: 25px 0;
@@ -324,6 +357,7 @@ body {
     background-color: #0f172a;
     font-size: 14px;
     text-align: left;
+    margin-bottom: 25px; /* Espacio para que el siguiente contenido no quede pegado */
 }
 .tabla-datos th {
     background-color: #173630;
@@ -461,5 +495,8 @@ body {
     }
     .col-span-2 {
         grid-column: span 1;
+    }
+    .sidebar {
+        max-height: none; /* Desactiva el límite en móviles para un flujo natural hacia abajo */
     }
 }
