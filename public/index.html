@@ -82,9 +82,13 @@
         
         <article class="contenido-pagina-apunte">
             <h1 id="apunte-pagina-titulo" class="apunte-gran-titulo">Cargando Título...</h1>
-            <p id="apunte-pagina-fecha" class="apunte-gran-fecha">Cargando fecha...</p>
-            <div class="divisor-apunte"></div>
             
+            <div class="meta-y-acciones">
+                <p id="apunte-pagina-fecha" class="apunte-gran-fecha">Cargando fecha...</p>
+                <div id="apunte-pagina-botones-pdf"></div>
+            </div>
+            
+            <div class="divisor-apunte"></div>
             <div id="apunte-pagina-cuerpo"></div>
         </article>
     </div>
@@ -126,6 +130,11 @@
                 <div class="form-group">
                     <label>Categoría del Documento</label>
                     <input type="text" id="pub-categoria" placeholder="Ej: TEORÍA / PRÁCTICA" required>
+                </div>
+
+                <div class="form-group col-span-2">
+                    <label>Enlace del documento PDF (Google Drive)</label>
+                    <input type="url" id="pub-pdf-url" placeholder="https://drive.google.com/file/d/...">
                 </div>
 
                 <div class="form-group col-span-2">
@@ -244,6 +253,18 @@
             document.getElementById('apunte-pagina-titulo').innerText = `${data.semana}: ${data.titulo}`;
             document.getElementById('apunte-pagina-fecha').innerText = data.fecha;
 
+            // MODIFICADO: Inyección dinámica de botones si el registro cuenta con pdf_url en Neon
+            const contenedorBotones = document.getElementById('apunte-pagina-botones-pdf');
+            contenedorBotones.innerHTML = '';
+            if (data.pdf_url) {
+                contenedorBotones.innerHTML = `
+                    <div class="botones-pdf-container">
+                        <a href="${data.pdf_url}" target="_blank" rel="noopener noreferrer" class="btn-pdf-action btn-visualizar">👁️ Ver PDF</a>
+                        <a href="${data.pdf_url}" target="_blank" rel="noopener noreferrer" class="btn-pdf-action btn-descargar">📥 Descargar</a>
+                    </div>
+                `;
+            }
+
             const cuerpoApunte = document.getElementById('apunte-pagina-cuerpo');
             let lineas = data.contenido.split('\n');
             let htmlFinal = "";
@@ -330,6 +351,7 @@
             } catch (error) { alert('Error al iniciar sesión'); }
         }
 
+        // MODIFICADO: Ahora extrae 'pub-pdf-url' y lo envía adjunto en el objeto JSON
         async function procesarPublicacion(event) {
             event.preventDefault();
             const opciones = { day: '2-digit', month: 'long', year: 'numeric' };
@@ -342,6 +364,7 @@
                 subtitulo: document.getElementById('pub-subtitulo').value,
                 categoria: document.getElementById('pub-categoria').value,
                 contenido: document.getElementById('pub-contenido').value,
+                pdf_url: document.getElementById('pub-pdf-url').value,
                 fecha: hoy
             };
 
@@ -357,13 +380,13 @@
                     document.getElementById('pub-titulo').value = '';
                     document.getElementById('pub-subtitulo').value = '';
                     document.getElementById('pub-contenido').value = '';
+                    document.getElementById('pub-pdf-url').value = '';
                     regresarAlDashboard();
                     cargarDatos();
                 }
             } catch (error) { alert('Error al publicar'); }
         }
 
-        // Nueva función encargada de ejecutar el DELETE hacia la API
         async function eliminarArticuloActual() {
             const data = datosFiltrados[articuloSeleccionadoIndex];
             if (!data || !data.id) return alert("No se puede eliminar: ID del artículo no encontrado.");
@@ -378,7 +401,7 @@
                     if (resultado.success) {
                         alert("Artículo eliminado correctamente.");
                         regresarAlDashboard();
-                        cargarDatos(); // Actualiza la interfaz recargando desde la BD
+                        cargarDatos(); 
                     } else {
                         alert("Error al intentar eliminar en la base de datos.");
                     }
@@ -408,7 +431,6 @@
                 document.getElementById('box-publicar-estado').style.display = 'none';
             }
 
-            // Sincronizar dinámicamente visibilidad de botones de eliminación
             if(document.getElementById('btn-eliminar-dashboard')) {
                 document.getElementById('btn-eliminar-dashboard').style.display = displayAdmin;
             }
