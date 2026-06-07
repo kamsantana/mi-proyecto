@@ -39,7 +39,7 @@
 
                 <div id="box-publicar-estado" style="display: none;">
                     <h4 class="menu-title">✍️ Gestión de Contenido</h4>
-                    <button type="button" onclick="mostrarPaginaPublicar()" class="btn-menu-action btn-green">✍️ Redactar en Grande</button>
+                    <button type="button" onclick="prepararNuevoArticulo()" class="btn-menu-action btn-green">✍️ Redactar en Grande</button>
                     <hr class="menu-divider">
                     <button type="button" onclick="cerrarSesion()" class="btn-logout-link">🚪 Cerrar Sesión</button>
                 </div>
@@ -58,6 +58,7 @@
                 <span class="date" id="card-date">Hoy</span>
                 <div style="display: flex; gap: 10px;">
                     <button id="btn-eliminar-dashboard" class="btn-regresar btn-cancelar" style="display: none;" onclick="eliminarArticuloActual()">🗑️ Eliminar</button>
+                    <button id="btn-editar-dashboard" class="btn-consultar" style="display: none; background-color: #e67e22;" onclick="cargarArticuloEnFormulario()">✏️ Editar</button>
                     <button class="btn-consultar" id="btn-consultar-trigger" style="display: none;" onclick="mostrarPaginaApunte()">CONSULTAR APUNTE ➔</button>
                 </div>
             </div>
@@ -76,6 +77,7 @@
             <button class="btn-regresar" onclick="regresarAlDashboard()">← VOLVER AL LISTADO</button>
             <div style="display: flex; gap: 10px; align-items: center;">
                 <button id="btn-eliminar-lectura" class="btn-regresar btn-cancelar" style="display: none;" onclick="eliminarArticuloActual()">🗑️ Eliminar Semana</button>
+                <button id="btn-editar-lectura" class="btn-consultar" style="display: none; background-color: #e67e22; padding: 10px 15px;" onclick="cargarArticuloEnFormulario()">✏️ Editar Semana</button>
                 <span class="badge" id="apunte-pagina-categoria">TEORÍA</span>
             </div>
         </div>
@@ -97,13 +99,15 @@
         <div class="contenedor-formulario-grande">
             <div class="form-header">
                 <div>
-                    <h2>🚀 Publicar Artículo Académico</h2>
+                    <h2 id="formulario-titulo-accion">🚀 Publicar Artículo Académico</h2>
                     <p>Sincronización nativa y directa hacia la base de datos de Neon Console</p>
                 </div>
                 <button type="button" class="btn-regresar btn-cancelar" onclick="regresarAlDashboard()">❌ Cancelar</button>
             </div>
 
             <form onsubmit="procesarPublicacion(event)" class="grid-form">
+                <input type="hidden" id="pub-id-editar" value="">
+
                 <div class="form-group">
                     <label>Asignatura / Sección</label>
                     <select id="pub-seccion" required>
@@ -143,7 +147,7 @@
                 </div>
 
                 <div class="form-actions col-span-2">
-                    <button type="submit" class="btn-submit">🚀 Confirmar Publicación en Neon</button>
+                    <button type="submit" id="btn-submit-formulario" class="btn-submit">🚀 Confirmar Publicación en Neon</button>
                 </div>
             </form>
         </div>
@@ -180,6 +184,7 @@
                 document.getElementById('card-text').innerText = "Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes cargados en tiempo real.";
                 document.getElementById('card-date').innerText = "Hoy";
                 document.getElementById('btn-consultar-trigger').style.display = 'none';
+                actualizarInterfazUsuario(); // Asegura ocultar botones de admin en inicio
                 return;
             }
 
@@ -202,6 +207,7 @@
                 document.getElementById('card-text').innerText = "Aún no se han registrado artículos para esta sección en Neon Console.";
                 document.getElementById('card-date').innerText = "--";
                 document.getElementById('btn-consultar-trigger').style.display = 'none';
+                actualizarInterfazUsuario();
                 return;
             }
 
@@ -229,6 +235,7 @@
             document.getElementById('card-subtitle').innerText = data.subtitulo;
             document.getElementById('card-text').innerText = data.contenido.substring(0, 140) + "... (clic en consultar para ver completo)";
             document.getElementById('card-date').innerText = data.fecha;
+            actualizarInterfazUsuario();
         }
 
         function seleccionarArticulo(indice, evento) {
@@ -253,7 +260,6 @@
             document.getElementById('apunte-pagina-titulo').innerText = `${data.semana}: ${data.titulo}`;
             document.getElementById('apunte-pagina-fecha').innerText = data.fecha;
 
-            // MODIFICADO: Inyección dinámica de botones si el registro cuenta con pdf_url en Neon
             const contenedorBotones = document.getElementById('apunte-pagina-botones-pdf');
             contenedorBotones.innerHTML = '';
             if (data.pdf_url) {
@@ -306,6 +312,7 @@
             document.getElementById('sitio-principal').style.display = 'none';
             document.getElementById('vista-publicar-completo').style.display = 'none';
             document.getElementById('vista-apunte-completo').style.display = 'block';
+            actualizarInterfazUsuario();
             window.scrollTo(0, 0);
         }
 
@@ -321,6 +328,7 @@
             document.getElementById('vista-apunte-completo').style.display = 'none';
             document.getElementById('vista-publicar-completo').style.display = 'none';
             document.getElementById('sitio-principal').style.display = 'grid'; 
+            actualizarInterfazUsuario();
         }
 
         function toggleMenuPerfil(event) {
@@ -351,13 +359,14 @@
             } catch (error) { alert('Error al iniciar sesión'); }
         }
 
-        // MODIFICADO: Ahora extrae 'pub-pdf-url' y lo envía adjunto en el objeto JSON
+        // MODIFICADO: Soporta de forma bifuncional tanto POST (crear) como PUT (editar)
         async function procesarPublicacion(event) {
             event.preventDefault();
             const opciones = { day: '2-digit', month: 'long', year: 'numeric' };
             const hoy = new Date().toLocaleDateString('es-ES', opciones);
+            const idEditar = document.getElementById('pub-id-editar').value;
 
-            const nuevoArticulo = {
+            const datosArticulo = {
                 seccion: document.getElementById('pub-seccion').value,
                 semana: document.getElementById('pub-semana').value,
                 titulo: document.getElementById('pub-titulo').value,
@@ -369,22 +378,72 @@
             };
 
             try {
-                const res = await fetch('/api/publicar', {
-                    method: 'POST',
+                let urlApi = '/api/publicar';
+                let metodo = 'POST';
+
+                if (idEditar) {
+                    datosArticulo.id = idEditar;
+                    urlApi = '/api/editar';
+                    metodo = 'PUT';
+                }
+
+                const res = await fetch(urlApi, {
+                    method: metodo,
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(nuevoArticulo)
+                    body: JSON.stringify(datosArticulo)
                 });
+                
                 const resultado = await res.json();
                 if (resultado.success) {
-                    alert('¡Artículo guardado con éxito en Neon!');
+                    alert(idEditar ? '¡Artículo actualizado con éxito en Neon!' : '¡Artículo guardado con éxito en Neon!');
+                    // Limpieza total del formulario
+                    document.getElementById('pub-id-editar').value = '';
                     document.getElementById('pub-titulo').value = '';
                     document.getElementById('pub-subtitulo').value = '';
                     document.getElementById('pub-contenido').value = '';
                     document.getElementById('pub-pdf-url').value = '';
                     regresarAlDashboard();
                     cargarDatos();
+                } else {
+                    alert('Error en Neon Console: ' + resultado.error);
                 }
-            } catch (error) { alert('Error al publicar'); }
+            } catch (error) { alert('Error al intentar guardar los cambios.'); }
+        }
+
+        // AÑADIDO: Carga los datos del objeto actual para rellenar los inputs
+        function cargarArticuloEnFormulario() {
+            const data = datosFiltrados[articuloSeleccionadoIndex];
+            if (!data) return alert("Selecciona un apunte válido para editar.");
+
+            document.getElementById('formulario-titulo-accion').innerText = `✏️ Editando: ${data.semana}`;
+            document.getElementById('btn-submit-formulario').innerText = "💾 Guardar Cambios en Neon";
+            
+            document.getElementById('pub-id-editar').value = data.id; 
+            document.getElementById('pub-seccion').value = (data.seccion || 'arquitectura').toLowerCase();
+            document.getElementById('pub-semana').value = data.semana;
+            document.getElementById('pub-titulo').value = data.titulo;
+            document.getElementById('pub-subtitulo').value = data.subtitulo;
+            document.getElementById('pub-categoria').value = data.categoria;
+            document.getElementById('pub-pdf-url').value = data.pdf_url || '';
+            document.getElementById('pub-contenido').value = data.contenido;
+
+            mostrarPaginaPublicar();
+        }
+
+        // AÑADIDO: Limpia el formulario previniendo que se crucen datos al redactar algo nuevo
+        function prepararNuevoArticulo() {
+            document.getElementById('formulario-titulo-accion').innerText = "🚀 Publicar Artículo Académico";
+            document.getElementById('btn-submit-formulario').innerText = "🚀 Confirmar Publicación en Neon";
+            document.getElementById('pub-id-editar').value = ""; 
+            
+            document.getElementById('pub-semana').value = '';
+            document.getElementById('pub-titulo').value = '';
+            document.getElementById('pub-subtitulo').value = '';
+            document.getElementById('pub-categoria').value = '';
+            document.getElementById('pub-contenido').value = '';
+            document.getElementById('pub-pdf-url').value = '';
+            
+            mostrarPaginaPublicar();
         }
 
         async function eliminarArticuloActual() {
@@ -420,8 +479,9 @@
             filtrarYMostrar(seccionActual);
         }
 
+        // MODIFICADO: Ahora administra eficientemente la visibilidad de los 4 botones administrativos
         function actualizarInterfazUsuario() {
-            const displayAdmin = sesionActiva ? 'block' : 'none';
+            const displayAdmin = (sesionActiva && seccionActual !== 'inicio' && datosFiltrados.length > 0) ? 'block' : 'none';
 
             if (sesionActiva) {
                 document.getElementById('box-login-estado').style.display = 'none';
@@ -434,8 +494,14 @@
             if(document.getElementById('btn-eliminar-dashboard')) {
                 document.getElementById('btn-eliminar-dashboard').style.display = displayAdmin;
             }
+            if(document.getElementById('btn-editar-dashboard')) {
+                document.getElementById('btn-editar-dashboard').style.display = displayAdmin;
+            }
             if(document.getElementById('btn-eliminar-lectura')) {
                 document.getElementById('btn-eliminar-lectura').style.display = displayAdmin;
+            }
+            if(document.getElementById('btn-editar-lectura')) {
+                document.getElementById('btn-editar-lectura').style.display = displayAdmin;
             }
         }
 

@@ -7,6 +7,7 @@
     --accent-green: #00df89;
     --border-green: #1f5e49;
     --orange-accent: #e57c48;
+    --edit-orange: #e67e22; /* NUEVO: Color corporativo para los botones de edición */
 }
 
 body {
@@ -162,6 +163,21 @@ body {
     background-color: #ef4444 !important;
     color: #ffffff !important;
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+/* NUEVO: Botones avanzados de Edición de Semanas */
+#btn-editar-dashboard,
+#btn-editar-lectura {
+    background: transparent;
+    border: 1px solid var(--edit-orange);
+    color: var(--edit-orange);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+#btn-editar-dashboard:hover,
+#btn-editar-lectura:hover {
+    background-color: var(--edit-orange);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(230, 126, 34, 0.4);
 }
 
 /* ==========================================================================
