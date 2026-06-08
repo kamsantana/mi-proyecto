@@ -184,7 +184,7 @@
                 document.getElementById('card-text').innerText = "Bienvenido a tu plataforma de estudio. Haz clic en 'Arquitectura' o 'Calidad' en el menú de navegación superior para desplegar los apuntes cargados en tiempo real.";
                 document.getElementById('card-date').innerText = "Hoy";
                 document.getElementById('btn-consultar-trigger').style.display = 'none';
-                actualizarInterfazUsuario(); // Asegura ocultar botones de admin en inicio
+                actualizarInterfazUsuario(); 
                 return;
             }
 
@@ -262,7 +262,9 @@
 
             const contenedorBotones = document.getElementById('apunte-pagina-botones-pdf');
             contenedorBotones.innerHTML = '';
-            if (data.pdf_url) {
+            
+            // MODIFICADO: Solo inyecta el HTML de los botones si pdf_url tiene texto real guardado
+            if (data.pdf_url && data.pdf_url.trim() !== '') {
                 contenedorBotones.innerHTML = `
                     <div class="botones-pdf-container">
                         <a href="${data.pdf_url}" target="_blank" rel="noopener noreferrer" class="btn-pdf-action btn-visualizar">👁️ Ver PDF</a>
@@ -359,7 +361,6 @@
             } catch (error) { alert('Error al iniciar sesión'); }
         }
 
-        // MODIFICADO: Soporta de forma bifuncional tanto POST (crear) como PUT (editar)
         async function procesarPublicacion(event) {
             event.preventDefault();
             const opciones = { day: '2-digit', month: 'long', year: 'numeric' };
@@ -396,7 +397,6 @@
                 const resultado = await res.json();
                 if (resultado.success) {
                     alert(idEditar ? '¡Artículo actualizado con éxito en Neon!' : '¡Artículo guardado con éxito en Neon!');
-                    // Limpieza total del formulario
                     document.getElementById('pub-id-editar').value = '';
                     document.getElementById('pub-titulo').value = '';
                     document.getElementById('pub-subtitulo').value = '';
@@ -410,7 +410,6 @@
             } catch (error) { alert('Error al intentar guardar los cambios.'); }
         }
 
-        // AÑADIDO: Carga los datos del objeto actual para rellenar los inputs
         function cargarArticuloEnFormulario() {
             const data = datosFiltrados[articuloSeleccionadoIndex];
             if (!data) return alert("Selecciona un apunte válido para editar.");
@@ -430,7 +429,6 @@
             mostrarPaginaPublicar();
         }
 
-        // AÑADIDO: Limpia el formulario previniendo que se crucen datos al redactar algo nuevo
         function prepararNuevoArticulo() {
             document.getElementById('formulario-titulo-accion').innerText = "🚀 Publicar Artículo Académico";
             document.getElementById('btn-submit-formulario').innerText = "🚀 Confirmar Publicación en Neon";
@@ -479,7 +477,6 @@
             filtrarYMostrar(seccionActual);
         }
 
-        // MODIFICADO: Ahora administra eficientemente la visibilidad de los 4 botones administrativos
         function actualizarInterfazUsuario() {
             const displayAdmin = (sesionActiva && seccionActual !== 'inicio' && datosFiltrados.length > 0) ? 'block' : 'none';
 
