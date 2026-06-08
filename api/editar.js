@@ -1,55 +1,56 @@
-// api/editar.js
-const { Pool } = require('pg');
+import { neon } from '@neondatabase/serverless';
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, 
-  ssl: { rejectUnauthorized: false }
-});
-
-module.exports = async (req, res) => {
-    // Manejar solo peticiones PUT
+export default async function handler(req, res) {
+    // Permitir solo peticiones PUT
     if (req.method !== 'PUT') {
         return res.status(405).json({ success: false, error: 'Método no permitido' });
     }
 
     try {
-        // SEGURIDAD: Forzar el parseo del body si viene como string bruto
+        // Asegurar el parseo del contenido por si viene en string plano
         let body = req.body;
         if (typeof body === 'string') {
             body = JSON.parse(body);
         }
 
         const { id, seccion, semana, titulo, subtitulo, categoria, contenido, pdf_url, fecha } = body;
-
-        let query;
-        let valores;
+        const sql = neon(process.env.DATABASE_URL);
 
         // MODO SEGURO 1: Si viene un ID numérico válido, actualizamos por ID
         if (id && !isNaN(id)) {
-            query = `
+            await sql`
                 UPDATE apuntes 
-                SET seccion = $1, semana = $2, titulo = $3, subtitulo = $4, categoria = $5, contenido = $6, pdf_url = $7, fecha = $8
-                WHERE id = $9
+                SET 
+                    seccion = ${seccion}, 
+                    semana = ${semana}, 
+                    titulo = ${titulo}, 
+                    subtitulo = ${subtitulo}, 
+                    categoria = ${categoria}, 
+                    contenido = ${contenido}, 
+                    pdf_url = ${pdf_url || null}, 
+                    fecha = ${fecha}
+                WHERE id = ${parseInt(id)};
             `;
-            valores = [seccion, semana, titulo, subtitulo, categoria, contenido, pdf_url || null, fecha, id];
         } 
-        // MODO SEGURO 2: Fallback por Semana y Sección si el ID no se cargó correctamente
+        // MODO SEGURO 2 (Fallback): Si no hay ID, editamos buscando por la combinación de semana y materia
         else {
-            query = `
+            await sql`
                 UPDATE apuntes 
-                SET titulo = $1, subtitulo = $2, categoria = $3, contenido = $4, pdf_url = $5, fecha = $6
-                WHERE LOWER(semana) = LOWER($7) AND LOWER(seccion) = LOWER($8)
+                SET 
+                    titulo = ${titulo}, 
+                    subtitulo = ${subtitulo}, 
+                    categoria = ${categoria}, 
+                    contenido = ${contenido}, 
+                    pdf_url = ${pdf_url || null}, 
+                    fecha = ${fecha}
+                WHERE LOWER(semana) = LOWER(${semana}) AND LOWER(seccion) = LOWER(${seccion});
             `;
-            valores = [titulo, subtitulo, categoria, contenido, pdf_url || null, fecha, semana, seccion];
         }
-        
-        await pool.query(query, valores);
 
         return res.status(200).json({ success: true, message: 'Actualizado en Neon con éxito.' });
 
     } catch (error) {
-        console.error("Error completo en la API:", error);
-        // CRUCIAL: Devolvemos el error exacto al frontend para inspeccionarlo si falla
+        console.error("Error en la API de edición:", error);
         return res.status(500).json({ success: false, error: error.message });
     }
-};
+}
