@@ -1,7 +1,6 @@
 // api/editar.js
 const { Pool } = require('pg');
 
-// Reutiliza tu configuración de conexión idéntica a la de publicar.js
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, 
   ssl: { rejectUnauthorized: false }
@@ -13,9 +12,15 @@ module.exports = async (req, res) => {
         return res.status(405).json({ success: false, error: 'Método no permitido' });
     }
 
-    const { id, seccion, semana, titulo, subtitulo, categoria, contenido, pdf_url, fecha } = req.body;
-
     try {
+        // SEGURIDAD: Forzar el parseo del body si viene como string bruto
+        let body = req.body;
+        if (typeof body === 'string') {
+            body = JSON.parse(body);
+        }
+
+        const { id, seccion, semana, titulo, subtitulo, categoria, contenido, pdf_url, fecha } = body;
+
         let query;
         let valores;
 
@@ -28,7 +33,7 @@ module.exports = async (req, res) => {
             `;
             valores = [seccion, semana, titulo, subtitulo, categoria, contenido, pdf_url || null, fecha, id];
         } 
-        // MODO SEGURO 2 (Fallback): Si el ID falló o no existe, editamos buscando por Semana y Sección
+        // MODO SEGURO 2: Fallback por Semana y Sección si el ID no se cargó correctamente
         else {
             query = `
                 UPDATE apuntes 
@@ -38,12 +43,13 @@ module.exports = async (req, res) => {
             valores = [titulo, subtitulo, categoria, contenido, pdf_url || null, fecha, semana, seccion];
         }
         
-        const resultado = await pool.query(query, valores);
+        await pool.query(query, valores);
 
         return res.status(200).json({ success: true, message: 'Actualizado en Neon con éxito.' });
+
     } catch (error) {
-        console.error(error);
-        // Te devolvemos el mensaje exacto por si Neon rechaza alguna columna
-        return res.status(500).json({ success: false, error: 'Error en Neon SQL: ' + error.message });
+        console.error("Error completo en la API:", error);
+        // CRUCIAL: Devolvemos el error exacto al frontend para inspeccionarlo si falla
+        return res.status(500).json({ success: false, error: error.message });
     }
 };
