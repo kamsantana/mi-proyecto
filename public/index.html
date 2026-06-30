@@ -233,7 +233,11 @@
             document.getElementById('card-category').innerText = data.categoria.toUpperCase();
             document.getElementById('card-title').innerText = `${data.semana}: ${data.titulo}`;
             document.getElementById('card-subtitle').innerText = data.subtitulo;
-            document.getElementById('card-text').innerText = data.contenido.substring(0, 140) + "... (clic en consultar para ver completo)";
+            
+            // CORRECCIÓN AQUÍ: Evitamos que se muestren fragmentos de etiquetas HTML crudas eliminándolas temporalmente de la previsualización corta
+            let textoLimpio = data.contenido.replace(/<[^>]*>/g, '');
+            document.getElementById('card-text').innerText = textoLimpio.substring(0, 140) + "... (clic en consultar para ver completo)";
+            
             document.getElementById('card-date').innerText = data.fecha;
             actualizarInterfazUsuario();
         }
@@ -272,43 +276,9 @@
                 `;
             }
 
-            const cuerpoApunte = document.getElementById('apunte-pagina-cuerpo');
-            let lineas = data.contenido.split('\n');
-            let htmlFinal = "";
-            let enTabla = false;
-
-            lineas.forEach(linea => {
-                let limpia = linea.trim();
-                
-                if (limpia.includes('|')) {
-                    if (!enTabla) {
-                        htmlFinal += `<div class="contenedor-cuadro-academico"><table class="tabla-datos"><thead>`;
-                        let celdas = limpia.split('|');
-                        htmlFinal += `<tr>${celdas.map(c => `<th>${c.trim()}</th>`).join('')}</tr></thead><tbody>`;
-                        enTabla = true;
-                    } else {
-                        let celdas = limpia.split('|');
-                        htmlFinal += `<tr>${celdas.map(c => `<td>${c.trim()}</td>`).join('')}</tr>`;
-                    }
-                } else {
-                    if (enTabla) {
-                        htmlFinal += `</tbody></table></div>`;
-                        enTabla = false;
-                    }
-                    if (limpia !== "") {
-                        if (limpia.startsWith('###')) {
-                            htmlFinal += `<h3 class="apunte-subtitulo-h3">${limpia.replace('###', '')}</h3>`;
-                        } else if (limpia.startsWith('-') || limpia.startsWith('*')) {
-                            htmlFinal += `<li class="apunte-item-lista">${limpia.substring(1).trim()}</li>`;
-                        } else {
-                            htmlFinal += `<p class="apunte-parrafo">${limpia}</p>`;
-                        }
-                    }
-                }
-            });
-
-            if (enTabla) htmlFinal += `</tbody></table></div>`;
-            cuerpoApunte.innerHTML = htmlFinal;
+            // 🌟 CAMBIO CRÍTICO: Dado que el backend estructuró todo en hermosos bloques divs semánticos, 
+            // inyectamos directamente el HTML limpio procesado por Neon.
+            document.getElementById('apunte-pagina-cuerpo').innerHTML = data.contenido;
 
             document.getElementById('sitio-principal').style.display = 'none';
             document.getElementById('vista-publicar-completo').style.display = 'none';
@@ -501,8 +471,10 @@
             }
         }
 
-        window.onclick = function() {
-            document.getElementById('dropdown-menu').style.display = 'none';
+        window.onclick = function(event) {
+            if (!event.target.closest('.user-profile')) {
+                document.getElementById('dropdown-menu').style.display = 'none';
+            }
         }
 
         cargarDatos();

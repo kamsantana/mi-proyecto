@@ -355,7 +355,7 @@ pre, code {
     margin-bottom: 20px;
 }
 
-/* TABLAS Y CUADROS ACADÉMICOS (SOPORTE DEL OPERADOR '|') */
+/* TABLAR Y CUADROS ACADÉMICOS (SOPORTE DEL OPERADOR '|') */
 .contenedor-cuadro-academico {
     margin: 25px 0;
     overflow-x: auto;
@@ -368,7 +368,7 @@ pre, code {
     background-color: #0f172a;
     font-size: 14px;
     text-align: left;
-    margin-bottom: 25px; /* Espacio para que el siguiente contenido no quede pegado */
+    margin-bottom: 25px;
 }
 .tabla-datos th {
     background-color: #173630;
@@ -489,31 +489,23 @@ pre, code {
 }
 
 /* ==========================================================================
-   NUEVO: ALINEACIÓN DE CABECERA Y BOTONES COMPACTOS DE ACCIÓN PDF
+   ALINEACIÓN DE CABECERA Y BOTONES COMPACTOS DE ACCIÓN PDF
    ========================================================================== */
-
-/* Alinea la fecha a la izquierda y el contenedor de botones a la derecha */
 .meta-y-acciones {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 22px;
 }
-
-/* Resetea la fecha de lectura heredando tus estilos */
 .apunte-gran-fecha {
     color: var(--text-gray);
     font-size: 14px;
-    margin: 0 !important; /* Limpia márgenes para centrar verticalmente con los botones */
+    margin: 0 !important;
 }
-
-/* Agrupador de botones con espacio uniforme */
 .botones-pdf-container {
     display: flex;
     gap: 12px;
 }
-
-/* Estilos comunes táctiles e interactivos para botones */
 .btn-pdf-action {
     display: inline-flex;
     align-items: center;
@@ -527,8 +519,6 @@ pre, code {
     transition: all 0.2s ease;
     cursor: pointer;
 }
-
-/* Botón Ver PDF (Fondo verde oscuro nativo - Texto verde brillante) */
 .btn-visualizar {
     background-color: #173630;
     border: 1px solid var(--border-green);
@@ -540,8 +530,6 @@ pre, code {
     box-shadow: 0 0 12px rgba(0, 223, 137, 0.4);
     transform: translateY(-1px);
 }
-
-/* Botón Descargar (Transparente con borde naranja corporativo) */
 .btn-descargar {
     background-color: transparent;
     border: 1px solid var(--orange-accent);
@@ -552,6 +540,49 @@ pre, code {
     color: #ffffff;
     box-shadow: 0 0 12px rgba(229, 124, 72, 0.4);
     transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   CUADROS ACADÉMICOS DESTACADOS & RE-ESTILIZACIÓN DE CÓDIGO
+   ========================================================================== */
+.cuadro-bloque {
+    border-left: 6px solid;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    background-color: #1a1e24; /* Color de fondo oscuro unificado */
+}
+.cuadro-bloque h3 {
+    margin-top: 0;
+    font-size: 1.15rem;
+}
+
+/* Variaciones de Color para Bloques */
+.azul { border-left-color: #3b82f6; }
+.azul h3 { color: #60a5fa; }
+
+.rojo { border-left-color: #ef4444; }
+.rojo h3 { color: #f87171; }
+
+.naranja { border-left-color: #f97316; }
+.naranja h3 { color: #fb923c; }
+
+.verde { border-left-color: #22c55e; }
+.verde h3 { color: #4ade80; }
+
+.morado { border-left-color: #a855f7; }
+.morado h3 { color: #c084fc; }
+
+/* Sobreescrituras de optimización para bloques de programación (Markdown) */
+pre {
+    background-color: #0f1115;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+}
+code {
+    color: #e2e8f0;
 }
 
 /* ==========================================================================
