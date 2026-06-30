@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YAVIRAC - Gestión Académica</title>
-    <link rel="stylesheet" href="style.css">
+    <link class="fluid-css" rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -263,7 +263,6 @@
             const contenedorBotones = document.getElementById('apunte-pagina-botones-pdf');
             contenedorBotones.innerHTML = '';
             
-            // MODIFICADO: Solo inyecta el HTML de los botones si pdf_url tiene texto real guardado
             if (data.pdf_url && data.pdf_url.trim() !== '') {
                 contenedorBotones.innerHTML = `
                     <div class="botones-pdf-container">
