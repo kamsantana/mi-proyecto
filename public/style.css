@@ -181,7 +181,7 @@ body {
 }
 
 /* ==========================================================================
-   DASHBOARD PRINCIPAL (GRID)
+   DASHBOARD PRINCIPAL (GRID) - MODIFICADO
    ========================================================================== */
 .dashboard-container {
     display: grid;
@@ -200,6 +200,8 @@ body {
     flex-direction: column;
     justify-content: space-between;
     position: relative;
+    height: auto;         /* 👈 MODIFICADO: El alto ahora se adapta a tu contenido de teoría */
+    padding-bottom: 30px; /* 👈 MODIFICADO: Margen inferior interno para proteger los elementos inferiores */
 }
 .badge {
     background-color: #163831;
