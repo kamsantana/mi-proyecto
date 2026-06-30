@@ -181,7 +181,7 @@ body {
 }
 
 /* ==========================================================================
-   DASHBOARD PRINCIPAL (GRID) - CORREGIDO
+   DASHBOARD PRINCIPAL (GRID) - CORREGIDO (MODIFICADO)
    ========================================================================== */
 .dashboard-container {
     display: grid;
@@ -189,7 +189,7 @@ body {
     gap: 30px;
     padding: 40px;
     flex-grow: 1;
-    align-items: flex-start; /* Evita que las columnas se estiren para igualar alturas */
+    align-items: flex-start; /* MODIFICADO: Evita obligatoriamente que la tarjeta izquierda imite la altura de la sidebar */
 }
 .main-card {
     background-color: var(--card-bg);
@@ -198,10 +198,10 @@ body {
     padding: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* 👈 CORREGIDO: Alinea el contenido arriba de forma natural */
-    gap: 20px;                   /* 👈 CORREGIDO: Mantiene una separación limpia y fluida entre textos y botones */
+    justify-content: flex-start; 
+    gap: 16px;                   /* MODIFICADO: Espaciado más compacto entre textos */
     position: relative;
-    height: auto;
+    height: fit-content;         /* MODIFICADO: Fuerza a la tarjeta a medir SOLO lo necesario según sus textos */
 }
 .badge {
     background-color: #163831;
@@ -212,10 +212,16 @@ body {
     font-weight: bold;
     width: fit-content;
 }
-.card-title { font-size: 36px; margin: 20px 0 10px 0; font-weight: 700; }
-.card-subtitle { color: var(--text-gray); font-size: 18px; margin: 0 0 20px 0; font-weight: 400; }
-.card-text { color: var(--text-gray); line-height: 1.6; font-size: 15px; margin-bottom: 20px; } /* Reducido de 40px a 20px porque ahora el contenedor maneja un gap global */
-.card-footer { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.card-title { font-size: 36px; margin: 10px 0 5px 0; font-weight: 700; }
+.card-subtitle { color: var(--text-gray); font-size: 18px; margin: 0 0 10px 0; font-weight: 400; }
+.card-text { color: var(--text-gray); line-height: 1.6; font-size: 15px; margin-bottom: 10px; } 
+.card-footer { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%; 
+    margin-top: 15px;            /* MODIFICADO: Une el botón directamente al final del texto */
+}
 .date { color: var(--text-gray); font-size: 14px; }
 .btn-consultar {
     background: transparent;
@@ -238,9 +244,9 @@ body {
     flex-direction: column;
     gap: 15px;
     position: relative;
-    flex-shrink: 0; /* Congela su tamaño para que no colapse */
-    max-height: 80vh; /* Establece un límite de altura proporcional a la pantalla */
-    overflow-y: auto; /* Activa el scroll interno si los artículos sobrepasan la altura */
+    flex-shrink: 0; 
+    max-height: 80vh; 
+    overflow-y: auto; 
 }
 
 /* Estilización sutil del scrollbar de la barra lateral */
@@ -552,7 +558,7 @@ pre, code {
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 4px;
-    background-color: #1a1e24; /* Color de fondo oscuro unificado */
+    background-color: #1a1e24; 
 }
 .cuadro-bloque h3 {
     margin-top: 0;
@@ -607,9 +613,8 @@ code {
         grid-column: span 1;
     }
     .sidebar {
-        max-height: none; /* Desactiva el límite en móviles para un flujo natural hacia abajo */
+        max-height: none; 
     }
-    /* Optimización de botones en pantallas móviles compactas */
     .meta-y-acciones {
         flex-direction: column;
         align-items: flex-start;
