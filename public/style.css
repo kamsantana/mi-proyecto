@@ -7,7 +7,7 @@
     --accent-green: #00df89;
     --border-green: #1f5e49;
     --orange-accent: #e57c48;
-    --edit-orange: #e67e22; /* NUEVO: Color corporativo para los botones de edición */
+    --edit-orange: #e67e22; /* Color corporativo para los botones de edición */
 }
 
 body {
@@ -165,7 +165,7 @@ body {
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
 }
 
-/* NUEVO: Botones avanzados de Edición de Semanas */
+/* Botones avanzados de Edición de Semanas */
 #btn-editar-dashboard,
 #btn-editar-lectura {
     background: transparent;
@@ -181,27 +181,31 @@ body {
 }
 
 /* ==========================================================================
-   DASHBOARD PRINCIPAL (GRID) - CORREGIDO (MODIFICADO)
+   DASHBOARD PRINCIPAL (GRID) - REPARADO EXPLICITAMENTE
    ========================================================================== */
 .dashboard-container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    /* Limitamos el ancho de la tarjeta izquierda a 750px para evitar que se vea vacía a los lados */
+    grid-template-columns: minmax(auto, 750px) 380px; 
     gap: 30px;
     padding: 40px;
     flex-grow: 1;
-    align-items: flex-start; /* MODIFICADO: Evita obligatoriamente que la tarjeta izquierda imite la altura de la sidebar */
+    justify-content: center; /* Centra los dos bloques en pantallas muy grandes */
 }
 .main-card {
     background-color: var(--card-bg);
     border: 2px solid var(--border-green);
     border-radius: 16px;
-    padding: 40px;
+    padding: 30px 40px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
-    gap: 16px;                   /* MODIFICADO: Espaciado más compacto entre textos */
+    gap: 12px;                  /* Compacta la distancia entre los elementos del texto */
     position: relative;
-    height: fit-content;         /* MODIFICADO: Fuerza a la tarjeta a medir SOLO lo necesario según sus textos */
+    
+    /* SOLUCIÓN AL ESTIRAMIENTO VERTICAL */
+    align-self: flex-start;     /* 👈 Fuerza a la tarjeta a encogerse verticalmente a su contenido */
+    height: auto !important;    /* 👈 Anula cualquier estiramiento residual heredado por el Grid */
 }
 .badge {
     background-color: #163831;
@@ -220,7 +224,7 @@ body {
     justify-content: space-between; 
     align-items: center; 
     width: 100%; 
-    margin-top: 15px;            /* MODIFICADO: Une el botón directamente al final del texto */
+    margin-top: 15px;           /* Pega el botón y la fecha inmediatamente debajo del texto */
 }
 .date { color: var(--text-gray); font-size: 14px; }
 .btn-consultar {
