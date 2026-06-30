@@ -97,7 +97,7 @@ body {
 }
 
 /* ==========================================================================
-   BOTONES GLOBALES (CORREGIDO ERROR TRANSPARENT)
+   BOTONES GLOBALES
    ========================================================================== */
 .btn-menu-action {
     width: 100%;
@@ -124,7 +124,7 @@ body {
     color: var(--bg-dark);
 }
 .btn-logout-link {
-    background-color: rgba(0,0,0,0); /* Solución a transparent */
+    background-color: rgba(0,0,0,0);
     border: none;
     color: #ff5252;
     width: 100%;
@@ -137,7 +137,7 @@ body {
     text-decoration: underline;
 }
 .btn-regresar {
-    background-color: rgba(0,0,0,0); /* Solución a transparent */
+    background-color: rgba(0,0,0,0);
     border: 1px solid var(--orange-accent);
     color: var(--orange-accent);
     padding: 10px 20px;
@@ -156,7 +156,7 @@ body {
 .btn-cancelar {
     border: 1px solid #ef4444 !important;
     color: #ef4444 !important;
-    background-color: rgba(0,0,0,0) !important; /* Solución a transparent */
+    background-color: rgba(0,0,0,0) !important;
 }
 .btn-cancelar:hover {
     background-color: #ef4444 !important;
@@ -166,7 +166,7 @@ body {
 
 #btn-editar-dashboard,
 #btn-editar-lectura {
-    background-color: rgba(0,0,0,0); /* Solución a transparent */
+    background-color: rgba(0,0,0,0);
     border: 1px solid var(--edit-orange);
     color: var(--edit-orange);
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
@@ -179,7 +179,7 @@ body {
 }
 
 /* ==========================================================================
-   DASHBOARD PRINCIPAL (GRID) - AJUSTE COMPACTO DEFINITIVO
+   DASHBOARD PRINCIPAL (GRID) - ESTRUCTURA FIJA ESTABLE
    ========================================================================== */
 .dashboard-container {
     display: grid;
@@ -197,11 +197,15 @@ body {
     padding: 25px 30px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; 
-    gap: 10px;               /* Textos más compactos */
+    justify-content: space-between; /* Mantiene el footer pegado abajo siempre */
+    gap: 10px;
     position: relative;
     align-self: flex-start;
-    height: auto !important;
+    
+    /* ALTURA FIJA E INMUTABLE ENTRE SEMANAS */
+    width: 100%;
+    min-height: 380px;              /* El cuadro no bailará ni cambiará de tamaño */
+    box-sizing: border-box;
 }
 .badge {
     background-color: #163831;
@@ -213,7 +217,7 @@ body {
     width: fit-content;
 }
 .card-title { 
-    font-size: 24px;         /* Tamaño optimizado para que no ocupe 3 líneas */
+    font-size: 24px; 
     margin: 5px 0; 
     font-weight: 700; 
     line-height: 1.3;
@@ -230,7 +234,6 @@ body {
     margin-bottom: 5px; 
 } 
 
-/* ESTILOS PARA LOS FRAGMENTOS INTERNOS (¿Qué es la arquitectura...?) */
 .main-card h3, 
 .main-card p {
     margin: 2px 0;
@@ -241,14 +244,14 @@ body {
     justify-content: space-between; 
     align-items: center; 
     width: 100%; 
-    margin-top: 15px;
+    margin-top: auto; /* Empuja el footer dinámicamente al fondo del espacio fijo */
     padding-top: 12px;
     border-top: 1px solid rgba(40, 58, 78, 0.4);
 }
 .date { color: var(--text-gray); font-size: 13px; }
 
 .btn-consultar {
-    background-color: rgba(0,0,0,0); /* Solución a transparent */
+    background-color: rgba(0,0,0,0);
     border: 1px solid var(--orange-accent);
     color: var(--orange-accent);
     padding: 8px 16px;
